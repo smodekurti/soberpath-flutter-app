@@ -50,7 +50,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                           'Find support groups near you',
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeLarge,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: .9),
                           ),
                         ),
                       ],
@@ -132,7 +132,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                     });
                   },
                   backgroundColor: Colors.white,
-                  selectedColor: AppConstants.primaryPurple.withOpacity(0.2),
+                  selectedColor: AppConstants.primaryPurple.withValues(alpha: .2),
                   checkmarkColor: AppConstants.primaryPurple,
                   labelStyle: TextStyle(
                     color: isSelected ? AppConstants.primaryPurple : AppConstants.textGray,
@@ -180,7 +180,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
             
             const SizedBox(height: AppConstants.paddingMedium),
             
-            Text(
+            const Text(
               'Connect with your local recovery community. Find in-person meetings in your area.',
               style: TextStyle(
                 fontSize: AppConstants.fontSizeLarge,
@@ -291,7 +291,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                   meeting['color'] as Color,
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -304,9 +304,9 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: .1),
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: .3)),
         ),
         child: Row(
           children: [
@@ -428,7 +428,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                   resource['url']!,
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -595,7 +595,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -714,15 +714,15 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 color: AppConstants.lightBlue,
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
               ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.info_outline,
                     color: AppConstants.blueAccent,
                     size: 20,
                   ),
-                  const SizedBox(width: AppConstants.paddingMedium),
-                  const Expanded(
+                  SizedBox(width: AppConstants.paddingMedium),
+                  Expanded(
                     child: Text(
                       'Remember: If you\'re in crisis, seek immediate help. Visit the Support tab for emergency resources.',
                       style: TextStyle(

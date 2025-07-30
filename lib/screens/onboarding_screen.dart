@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
@@ -180,7 +182,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         decoration: BoxDecoration(
                           color: index <= _currentPage
                               ? Colors.white
-                              : Colors.white.withOpacity(0.3),
+                              : Colors.white.withValues(alpha: .3),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -249,7 +251,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: .2),
               borderRadius: BorderRadius.circular(25),
             ),
             child: const Icon(
@@ -273,7 +275,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Your personal companion for recovery and sobriety tracking. Let\'s set up your profile to get started.',
             style: TextStyle(
               fontSize: AppConstants.fontSizeLarge,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: .9),
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -313,7 +315,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   feature,
                   style: TextStyle(
                     fontSize: AppConstants.fontSizeMedium,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: .9),
                   ),
                 ),
               ),
@@ -344,7 +346,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'This information helps us personalize your experience.',
             style: TextStyle(
               fontSize: AppConstants.fontSizeLarge,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: .9),
             ),
           ),
           const SizedBox(height: AppConstants.paddingXLarge),
@@ -438,7 +440,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'Help us track your progress and savings.',
             style: TextStyle(
               fontSize: AppConstants.fontSizeLarge,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: .9),
             ),
           ),
           const SizedBox(height: AppConstants.paddingXLarge),
@@ -515,7 +517,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Container(
             padding: const EdgeInsets.all(AppConstants.paddingLarge),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: .1),
               borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
             ),
             child: Row(
@@ -530,7 +532,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Text(
                     'This helps us calculate how much money you\'ve saved on your journey.',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: .9),
                       fontSize: AppConstants.fontSizeMedium,
                     ),
                   ),

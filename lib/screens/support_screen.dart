@@ -1,5 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_constants.dart';
 
@@ -43,7 +44,7 @@ class SupportScreen extends StatelessWidget {
                           'Get help when you need it',
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeLarge,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: .9),
                           ),
                         ),
                       ],
@@ -95,7 +96,7 @@ class SupportScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppConstants.lightRed,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusXLarge),
-          border: Border.all(color: AppConstants.dangerRed.withOpacity(0.3)),
+          border: Border.all(color: AppConstants.dangerRed.withValues(alpha: .3)),
         ),
         padding: const EdgeInsets.all(AppConstants.paddingLarge),
         child: Column(
@@ -145,17 +146,18 @@ class SupportScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
                 child: _buildCrisisContactItem(entry.key, entry.value),
               );
-            }).toList(),
+            }),
             
             const SizedBox(height: AppConstants.paddingMedium),
             
             Container(
               padding: const EdgeInsets.all(AppConstants.paddingMedium),
               decoration: BoxDecoration(
-                color: AppConstants.dangerRed.withOpacity(0.1),
+                color: AppConstants.dangerRed.withValues(alpha: .1),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
               ),
               child: Row(
+                // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   const Icon(
                     Icons.info_outline,
@@ -306,7 +308,7 @@ class SupportScreen extends StatelessWidget {
                   resource['color'] as Color,
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -405,7 +407,7 @@ class SupportScreen extends StatelessWidget {
                   strategy['description']!,
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -511,7 +513,7 @@ class SupportScreen extends StatelessWidget {
                   app['category']!,
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),

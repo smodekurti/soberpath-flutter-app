@@ -46,7 +46,7 @@ class AppHeader extends StatelessWidget {
                             AppConstants.appTagline,
                             style: TextStyle(
                               fontSize: AppConstants.fontSizeMedium,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: .9),
                             ),
                           ),
                         ],
@@ -59,7 +59,7 @@ class AppHeader extends StatelessWidget {
                             vertical: AppConstants.paddingSmall,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: .2),
                             borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
                           ),
                           child: Column(
@@ -76,7 +76,7 @@ class AppHeader extends StatelessWidget {
                                 'days strong',
                                 style: TextStyle(
                                   fontSize: AppConstants.fontSizeSmall,
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha: .9),
                                 ),
                               ),
                             ],

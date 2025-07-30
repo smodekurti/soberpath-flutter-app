@@ -75,10 +75,10 @@ class _SplashScreenState extends State<SplashScreen>
                           width: 120,
                           height: 120,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: .2),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: .3),
                               width: 2,
                             ),
                           ),
@@ -109,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
                           AppConstants.appTagline,
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeLarge,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: .9),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -120,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen>
                         SizedBox(
                           width: 200,
                           child: LinearProgressIndicator(
-                            backgroundColor: Colors.white.withOpacity(0.3),
+                            backgroundColor: Colors.white.withValues(alpha: .3),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Colors.white,
                             ),
@@ -135,7 +135,7 @@ class _SplashScreenState extends State<SplashScreen>
                           'Preparing your journey...',
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeMedium,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: .8),
                             fontWeight: FontWeight.w500,
                           ),
                         ),

@@ -14,14 +14,70 @@ class StatsCards extends StatelessWidget {
           children: [
             // Money Saved Card
             Expanded(
-              child: _buildStatCard(
-                context: context,
-                icon: Icons.savings_outlined,
-                iconColor: AppConstants.successGreen,
-                backgroundColor: AppConstants.lightGreen,
-                title: 'Money Saved',
-                value: '\$${provider.moneySaved.toStringAsFixed(0)}',
-                subtitle: 'Estimated at \$${provider.userProfile?.dailyCost.toStringAsFixed(0) ?? '15'}/day',
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppConstants.lightGreen,
+                              borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                            ),
+                            child: const Icon(
+                              Icons.savings_outlined,
+                              color: AppConstants.successGreen,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: AppConstants.paddingMedium),
+                          const Expanded(
+                            child: Text(
+                              'Money Saved',
+                              style: TextStyle(
+                                fontSize: AppConstants.fontSizeMedium,
+                                color: AppConstants.textGray,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: AppConstants.paddingMedium),
+                      
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '\$${provider.moneySaved.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            fontSize: AppConstants.fontSizeXXLarge,
+                            fontWeight: FontWeight.bold,
+                            color: AppConstants.successGreen,
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: AppConstants.paddingSmall),
+                      
+                      Text(
+                        'Est. \$${provider.userProfile?.dailyCost.toStringAsFixed(0) ?? "15"}/day',
+                        style: const TextStyle(
+                          fontSize: AppConstants.fontSizeSmall,
+                          color: AppConstants.textGray,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
             
@@ -29,88 +85,75 @@ class StatsCards extends StatelessWidget {
             
             // Milestones Card
             Expanded(
-              child: _buildStatCard(
-                context: context,
-                icon: Icons.emoji_events_outlined,
-                iconColor: AppConstants.blueAccent,
-                backgroundColor: AppConstants.lightBlue,
-                title: 'Milestones',
-                value: '${provider.achievedMilestonesCount}',
-                subtitle: 'Achievements unlocked',
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppConstants.lightBlue,
+                              borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                            ),
+                            child: const Icon(
+                              Icons.emoji_events_outlined,
+                              color: AppConstants.blueAccent,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: AppConstants.paddingMedium),
+                          const Expanded(
+                            child: Text(
+                              'Milestones',
+                              style: TextStyle(
+                                fontSize: AppConstants.fontSizeMedium,
+                                color: AppConstants.textGray,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      
+                      const SizedBox(height: AppConstants.paddingMedium),
+                      
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${provider.achievedMilestonesCount}',
+                          style: const TextStyle(
+                            fontSize: AppConstants.fontSizeXXLarge,
+                            fontWeight: FontWeight.bold,
+                            color: AppConstants.blueAccent,
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: AppConstants.paddingSmall),
+                      
+                      const Text(
+                        'Achievements unlocked',
+                        style: TextStyle(
+                          fontSize: AppConstants.fontSizeSmall,
+                          color: AppConstants.textGray,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
         );
       },
-    );
-  }
-
-  Widget _buildStatCard({
-    required BuildContext context,
-    required IconData icon,
-    required Color iconColor,
-    required Color backgroundColor,
-    required String title,
-    required String value,
-    required String subtitle,
-  }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: iconColor,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
-                      color: AppConstants.textGray,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: AppConstants.paddingMedium),
-            
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: AppConstants.fontSizeXXLarge,
-                fontWeight: FontWeight.bold,
-                color: iconColor,
-              ),
-            ),
-            
-            const SizedBox(height: AppConstants.paddingSmall),
-            
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: AppConstants.fontSizeSmall,
-                color: AppConstants.textGray,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

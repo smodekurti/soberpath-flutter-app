@@ -62,7 +62,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               'Track your milestones',
                               style: TextStyle(
                                 fontSize: AppConstants.fontSizeLarge,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: .9),
                               ),
                             ),
                           ],
@@ -153,8 +153,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppConstants.successGreen.withOpacity(0.1),
-                    AppConstants.successGreen.withOpacity(0.05),
+                    AppConstants.successGreen.withValues(alpha: .1),
+                    AppConstants.successGreen.withValues(alpha: .05),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),

@@ -79,9 +79,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ],
         ),
         child: SafeArea(
-          child: Padding(
+          child: Container(
+            height: 80, // Fixed height to prevent overflow
             padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.paddingMedium,
+              horizontal: AppConstants.paddingSmall,
               vertical: AppConstants.paddingSmall,
             ),
             child: Row(
@@ -91,47 +92,55 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 final item = entry.value;
                 final isSelected = index == _currentIndex;
 
-                return GestureDetector(
-                  onTap: () => _onTabTapped(index),
-                  behavior: HitTestBehavior.opaque,
-                  child: AnimatedContainer(
-                    duration: AppConstants.animationFast,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppConstants.paddingMedium,
-                      vertical: AppConstants.paddingSmall,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppConstants.primaryPurple.withOpacity(0.1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedSwitcher(
-                          duration: AppConstants.animationFast,
-                          child: Icon(
-                            isSelected ? item.activeIcon : item.icon,
-                            key: ValueKey(isSelected),
-                            color: isSelected
-                                ? AppConstants.primaryPurple
-                                : AppConstants.textGray,
-                            size: 24,
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => _onTabTapped(index),
+                    behavior: HitTestBehavior.opaque,
+                    child: AnimatedContainer(
+                      duration: AppConstants.animationFast,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppConstants.paddingSmall,
+                        vertical: AppConstants.paddingSmall,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppConstants.primaryPurple.withValues(alpha: 0.5)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedSwitcher(
+                            duration: AppConstants.animationFast,
+                            child: Icon(
+                              isSelected ? item.activeIcon : item.icon,
+                              key: ValueKey(isSelected),
+                              color: isSelected
+                                  ? AppConstants.primaryPurple
+                                  : AppConstants.textGray,
+                              size: 22, // Slightly smaller icon
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item.label,
-                          style: TextStyle(
-                            fontSize: AppConstants.fontSizeSmall,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                            color: isSelected
-                                ? AppConstants.primaryPurple
-                                : AppConstants.textGray,
+                          const SizedBox(height: 2), // Reduced spacing
+                          Flexible(
+                            child: Text(
+                              item.label,
+                              style: TextStyle(
+                                fontSize: AppConstants.fontSizeSmall - 1, // Smaller font
+                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                color: isSelected
+                                    ? AppConstants.primaryPurple
+                                    : AppConstants.textGray,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

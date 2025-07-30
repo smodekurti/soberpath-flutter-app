@@ -51,7 +51,7 @@ class SobrietyCounterCard extends StatelessWidget {
                         : '0 days',
                     style: TextStyle(
                       fontSize: AppConstants.fontSizeLarge,
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                   
@@ -61,7 +61,7 @@ class SobrietyCounterCard extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => _showDatePicker(context, provider),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withValues(alpha: 0.2),
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white, width: 1),
                       ),
