@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
 import '../models/sobriety_models.dart';
+import '../utils/responsive_helpers.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -249,12 +250,17 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Milestones & Achievements',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                Expanded(
+                  child: AutoSizeText(
+                    'Milestones & Achievements',
+                    style: TextStyle(
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(context, AppConstants.fontSizeXLarge),
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textDark,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 14,
+                    maxFontSize: AppConstants.fontSizeXLarge,
                   ),
                 ),
               ],
@@ -315,23 +321,29 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AutoSizeText(
                       '${milestone.days} Day${milestone.days != 1 ? 's' : ''}',
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeXLarge,
+                        fontSize: ResponsiveHelpers.getResponsiveFontSize(context, AppConstants.fontSizeXLarge),
                         fontWeight: FontWeight.bold,
                         color: milestone.achieved 
                             ? AppConstants.successGreen 
                             : AppConstants.textDark,
                       ),
+                      maxLines: 1,
+                      minFontSize: 14,
+                      maxFontSize: AppConstants.fontSizeXLarge,
                     ),
                     if (milestone.achieved && milestone.achievedDate != null)
-                      Text(
+                      AutoSizeText(
                         'Achieved on ${milestone.achievedDate!.day}/${milestone.achievedDate!.month}/${milestone.achievedDate!.year}',
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(context, AppConstants.fontSizeSmall),
                           color: AppConstants.successGreen,
                         ),
+                        maxLines: 1,
+                        minFontSize: 10,
+                        maxFontSize: AppConstants.fontSizeSmall,
                       ),
                   ],
                 ),
@@ -360,15 +372,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
           
           const SizedBox(height: AppConstants.paddingMedium),
           
-          Text(
+          AutoSizeText(
             milestone.benefit,
             style: TextStyle(
-              fontSize: AppConstants.fontSizeMedium,
+              fontSize: ResponsiveHelpers.getResponsiveFontSize(context, AppConstants.fontSizeMedium),
               color: milestone.achieved 
                   ? AppConstants.successGreen 
                   : AppConstants.textGray,
               height: 1.4,
             ),
+            maxLines: 3,
+            minFontSize: 12,
+            maxFontSize: AppConstants.fontSizeMedium,
           ),
           
           if (!milestone.achieved && stats != null) ...[
@@ -444,12 +459,17 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Health Benefits Timeline',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                Expanded(
+                  child: AutoSizeText(
+                    'Health Benefits Timeline',
+                    style: TextStyle(
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(context, AppConstants.fontSizeXLarge),
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textDark,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 14,
+                    maxFontSize: AppConstants.fontSizeXLarge,
                   ),
                 ),
               ],

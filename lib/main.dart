@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:soberpath_app/screens/home_screen.dart';
 
 import 'services/app_state_provider.dart';
 import 'screens/splash_screen.dart';
@@ -25,6 +26,10 @@ class SoberPathApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(),
         home: const AppInitializer(),
+        routes: {
+          '/checkIn': (context) =>
+              const MainNavigationScreen(), // Define the route
+        },
       ),
     );
   }
@@ -96,7 +101,8 @@ class SoberPathApp extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppConstants.primaryPurple, width: 2),
+          borderSide:
+              const BorderSide(color: AppConstants.primaryPurple, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
@@ -161,7 +167,7 @@ class _AppInitializerState extends State<AppInitializer> {
   Future<void> _initializeApp() async {
     final provider = Provider.of<AppStateProvider>(context, listen: false);
     await provider.initialize();
-    
+
     if (mounted) {
       _navigateToNextScreen();
     }
@@ -169,7 +175,7 @@ class _AppInitializerState extends State<AppInitializer> {
 
   void _navigateToNextScreen() {
     final provider = Provider.of<AppStateProvider>(context, listen: false);
-    
+
     // Add delay for splash screen effect
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {

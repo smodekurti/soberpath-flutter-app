@@ -177,6 +177,7 @@ class UserProfile {
   final String name;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final UsageFrequency usageFrequency;
 
   UserProfile({
     required this.id,
@@ -186,6 +187,7 @@ class UserProfile {
     required this.name,
     required this.createdAt,
     required this.updatedAt,
+    this.usageFrequency = UsageFrequency.daily,
   });
 
   Map<String, dynamic> toJson() {
@@ -197,6 +199,7 @@ class UserProfile {
       'name': name,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'usageFrequency': usageFrequency.name,
     };
   }
 
@@ -211,6 +214,10 @@ class UserProfile {
       name: json['name'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      usageFrequency: UsageFrequency.values.firstWhere(
+        (freq) => freq.name == json['usageFrequency'],
+        orElse: () => UsageFrequency.daily,
+      ),
     );
   }
 
@@ -222,6 +229,7 @@ class UserProfile {
     String? name,
     DateTime? createdAt,
     DateTime? updatedAt,
+    UsageFrequency? usageFrequency,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -231,6 +239,7 @@ class UserProfile {
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
+      usageFrequency: usageFrequency ?? this.usageFrequency,
     );
   }
 
@@ -239,6 +248,7 @@ class UserProfile {
     DateTime? soberDate,
     String substanceType = 'alcohol',
     double dailyCost = 15.0,
+    UsageFrequency usageFrequency = UsageFrequency.daily,
   }) {
     final now = DateTime.now();
     return UserProfile(
@@ -249,13 +259,14 @@ class UserProfile {
       name: name,
       createdAt: now,
       updatedAt: now,
+      usageFrequency: usageFrequency,
     );
   }
 
   double calculateMoneySaved() {
     if (soberDate == null) return 0.0;
     final stats = SobrietyStats.calculateFromDate(soberDate!);
-    return stats.days * dailyCost;
+    return stats.days * dailyCost * usageFrequency.multiplier;
   }
 
   bool get hasSoberDate => soberDate != null;
@@ -364,6 +375,26 @@ enum CravingLevel {
     return CravingLevel.values.firstWhere(
       (craving) => craving.value == value,
       orElse: () => CravingLevel.none,
+    );
+  }
+}
+
+enum UsageFrequency {
+  rarely(0.1, 'Rarely (1-2 times per month)'),
+  occasionally(0.25, 'Occasionally (1-2 times per week)'),
+  regularly(0.5, 'Regularly (3-4 times per week)'),
+  frequently(0.75, 'Frequently (5-6 times per week)'),
+  daily(1.0, 'Daily');
+
+  const UsageFrequency(this.multiplier, this.label);
+
+  final double multiplier;
+  final String label;
+
+  static UsageFrequency fromMultiplier(double multiplier) {
+    return UsageFrequency.values.firstWhere(
+      (freq) => freq.multiplier == multiplier,
+      orElse: () => UsageFrequency.daily,
     );
   }
 }

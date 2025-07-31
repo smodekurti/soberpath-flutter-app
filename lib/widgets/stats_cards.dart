@@ -26,7 +26,8 @@ class StatsCards extends StatelessWidget {
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: AppConstants.lightGreen,
-                              borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                              borderRadius: BorderRadius.circular(
+                                  AppConstants.borderRadiusSmall),
                             ),
                             child: const Icon(
                               Icons.savings_outlined,
@@ -49,9 +50,7 @@ class StatsCards extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: AppConstants.paddingMedium),
-                      
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -63,11 +62,9 @@ class StatsCards extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
                       const SizedBox(height: AppConstants.paddingSmall),
-                      
                       Text(
-                        'Est. \$${provider.userProfile?.dailyCost.toStringAsFixed(0) ?? "15"}/day',
+                        'Est. \$${(provider.userProfile!.dailyCost * (provider.userProfile?.usageFrequency.multiplier ?? 1.0)).toStringAsFixed(0) ?? "15"}/day avg',
                         style: const TextStyle(
                           fontSize: AppConstants.fontSizeSmall,
                           color: AppConstants.textGray,
@@ -80,9 +77,9 @@ class StatsCards extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(width: AppConstants.paddingMedium),
-            
+
             // Milestones Card
             Expanded(
               child: Card(
@@ -97,7 +94,8 @@ class StatsCards extends StatelessWidget {
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: AppConstants.lightBlue,
-                              borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                              borderRadius: BorderRadius.circular(
+                                  AppConstants.borderRadiusSmall),
                             ),
                             child: const Icon(
                               Icons.emoji_events_outlined,
@@ -120,9 +118,7 @@ class StatsCards extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
                       const SizedBox(height: AppConstants.paddingMedium),
-                      
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -134,9 +130,7 @@ class StatsCards extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
                       const SizedBox(height: AppConstants.paddingSmall),
-                      
                       const Text(
                         'Achievements unlocked',
                         style: TextStyle(

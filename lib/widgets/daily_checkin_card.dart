@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart'; // Import responsive helpers
 
 class DailyCheckInCard extends StatefulWidget {
   const DailyCheckInCard({super.key});
@@ -35,20 +36,23 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
 
   Widget _buildCompletedCheckIn(AppStateProvider provider) {
     final todaysCheckIn = provider.todaysCheckIn!;
-    
+
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
+            context, AppConstants.paddingLarge)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            FlexibleRow(
+              // Use FlexibleRow here
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppConstants.lightGreen,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.borderRadiusSmall),
                   ),
                   child: const Icon(
                     Icons.check_circle,
@@ -57,25 +61,26 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SafeText(
                   'Daily Check-in Complete',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeXLarge),
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textDark,
                   ),
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
+
             // Today's check-in summary
             Container(
               padding: const EdgeInsets.all(AppConstants.paddingMedium),
               decoration: BoxDecoration(
                 color: AppConstants.backgroundGray,
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                borderRadius:
+                    BorderRadius.circular(AppConstants.borderRadiusMedium),
               ),
               child: Column(
                 children: [
@@ -83,10 +88,10 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildMoodIndicator('Mood', todaysCheckIn.mood),
-                      _buildMoodIndicator('Cravings', todaysCheckIn.cravingLevel),
+                      _buildMoodIndicator(
+                          'Cravings', todaysCheckIn.cravingLevel),
                     ],
                   ),
-                  
                   if (todaysCheckIn.reflection.isNotEmpty) ...[
                     const SizedBox(height: AppConstants.paddingMedium),
                     Container(
@@ -94,7 +99,8 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                       padding: const EdgeInsets.all(AppConstants.paddingMedium),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                        borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusSmall),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +114,7 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                             ),
                           ),
                           const SizedBox(height: AppConstants.paddingSmall),
-                          Text(
+                          SafeText(
                             todaysCheckIn.reflection,
                             style: const TextStyle(
                               fontSize: AppConstants.fontSizeMedium,
@@ -123,13 +129,12 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                 ],
               ),
             ),
-            
             const SizedBox(height: AppConstants.paddingMedium),
-            
-            Text(
+            SafeText(
               'Great job checking in today! See you tomorrow.',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeMedium,
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeMedium),
                 color: AppConstants.successGreen,
                 fontWeight: FontWeight.w500,
               ),
@@ -143,12 +148,12 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
   Widget _buildMoodIndicator(String label, int value) {
     Color color;
     IconData icon;
-    
+
     if (label == 'Mood') {
-      if (value <= 3) {
+      if (value <= AppConstants.moodPoor) {
         color = AppConstants.dangerRed;
         icon = Icons.sentiment_very_dissatisfied;
-      } else if (value <= 6) {
+      } else if (value <= AppConstants.moodNeutral) {
         color = AppConstants.warningYellow;
         icon = Icons.sentiment_neutral;
       } else {
@@ -156,10 +161,10 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
         icon = Icons.sentiment_very_satisfied;
       }
     } else {
-      if (value <= 3) {
+      if (value <= AppConstants.cravingNone) {
         color = AppConstants.successGreen;
         icon = Icons.mood;
-      } else if (value <= 6) {
+      } else if (value <= AppConstants.cravingWarning) {
         color = AppConstants.warningYellow;
         icon = Icons.warning_amber;
       } else {
@@ -195,7 +200,8 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
   Widget _buildCheckInForm(AppStateProvider provider) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
+            context, AppConstants.paddingLarge)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -205,7 +211,8 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: AppConstants.lightRed,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                    borderRadius:
+                        BorderRadius.circular(AppConstants.borderRadiusSmall),
                   ),
                   child: const Icon(
                     Icons.favorite,
@@ -214,31 +221,30 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SafeText(
                   'Daily Check-in',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeXLarge),
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textDark,
                   ),
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
+
             // Mood Slider
-            const Text(
+            SafeText(
               'How are you feeling today? (1-10)',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeLarge),
                 fontWeight: FontWeight.w600,
                 color: AppConstants.textDark,
               ),
             ),
-            
             const SizedBox(height: AppConstants.paddingMedium),
-            
             Slider(
               value: provider.currentMood.toDouble(),
               min: 1,
@@ -249,49 +255,49 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                 provider.updateCurrentMood(value.toInt());
               },
             ),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                SafeText(
                   'Poor (1)',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     color: AppConstants.textGray,
                   ),
                 ),
-                Text(
+                SafeText(
                   'Current: ${provider.currentMood}',
-                  style: const TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                  style: TextStyle(
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     fontWeight: FontWeight.w600,
                     color: AppConstants.primaryPurple,
                   ),
                 ),
-                Text(
+                SafeText(
                   'Excellent (10)',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     color: AppConstants.textGray,
                   ),
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
+
             // Craving Level Slider
-            const Text(
+            SafeText(
               'Craving Level (1-10)',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeLarge),
                 fontWeight: FontWeight.w600,
                 color: AppConstants.textDark,
               ),
             ),
-            
             const SizedBox(height: AppConstants.paddingMedium),
-            
             Slider(
               value: provider.currentCravingLevel.toDouble(),
               min: 1,
@@ -302,49 +308,49 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                 provider.updateCurrentCravingLevel(value.toInt());
               },
             ),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                SafeText(
                   'None (1)',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     color: AppConstants.textGray,
                   ),
                 ),
-                Text(
+                SafeText(
                   'Current: ${provider.currentCravingLevel}',
-                  style: const TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                  style: TextStyle(
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     fontWeight: FontWeight.w600,
                     color: AppConstants.primaryPurple,
                   ),
                 ),
-                Text(
+                SafeText(
                   'Intense (10)',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeSmall),
                     color: AppConstants.textGray,
                   ),
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
+
             // Reflection Text Field
-            const Text(
+            SafeText(
               'Daily Reflection',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeLarge),
                 fontWeight: FontWeight.w600,
                 color: AppConstants.textDark,
               ),
             ),
-            
             const SizedBox(height: AppConstants.paddingMedium),
-            
             TextField(
               controller: _reflectionController,
               maxLines: 3,
@@ -356,21 +362,22 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                 provider.updateCurrentReflection(value);
               },
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
+
             // Save Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: provider.isLoading ? null : () => _saveCheckIn(provider),
+                onPressed:
+                    provider.isLoading ? null : () => _saveCheckIn(provider),
                 child: provider.isLoading
                     ? const SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text('Save Check-in'),
@@ -384,12 +391,13 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
 
   Future<void> _saveCheckIn(AppStateProvider provider) async {
     final success = await provider.saveDailyCheckIn();
-    
+
     if (success && mounted) {
       _reflectionController.clear();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Check-in saved! Great job taking care of yourself today.'),
+          content:
+              Text('Check-in saved! Great job taking care of yourself today.'),
           backgroundColor: AppConstants.successGreen,
         ),
       );

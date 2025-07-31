@@ -83,6 +83,10 @@ class AppStateProvider with ChangeNotifier {
       await _loadDailyCheckIns();
       await _loadMilestones();
       await _loadAppSettings();
+      
+      // Fix usage frequency if needed (migration)
+      await fixUsageFrequencyIfNeeded();
+      
       _clearError();
     } catch (e) {
       _setError('Failed to initialize app: $e');
@@ -97,6 +101,7 @@ class AppStateProvider with ChangeNotifier {
     DateTime? soberDate,
     String substanceType = 'alcohol',
     double dailyCost = 15.0,
+    UsageFrequency usageFrequency = UsageFrequency.occasionally,
   }) async {
     _setLoading(true);
     try {
@@ -105,6 +110,7 @@ class AppStateProvider with ChangeNotifier {
         soberDate: soberDate,
         substanceType: substanceType,
         dailyCost: dailyCost,
+        usageFrequency: usageFrequency,
       );
 
       await _databaseService.saveUserProfile(profile);
@@ -146,6 +152,7 @@ class AppStateProvider with ChangeNotifier {
     String? name,
     String? substanceType,
     double? dailyCost,
+    UsageFrequency? usageFrequency,
   }) async {
     if (_userProfile == null) return;
 
@@ -155,6 +162,7 @@ class AppStateProvider with ChangeNotifier {
         name: name,
         substanceType: substanceType,
         dailyCost: dailyCost,
+        usageFrequency: usageFrequency,
       );
 
       await _databaseService.updateUserProfile(updatedProfile);
@@ -327,6 +335,14 @@ class AppStateProvider with ChangeNotifier {
     
     final sum = recentCheckIns.fold<double>(0, (sum, checkIn) => sum + checkIn.cravingLevel);
     return sum / recentCheckIns.length;
+  }
+
+  // Migration helper for fixing frequency issue
+  Future<void> fixUsageFrequencyIfNeeded() async {
+    if (_userProfile != null && _userProfile!.usageFrequency == UsageFrequency.daily) {
+      // If the profile was created with the old default (daily), update it to occasionally
+      await updateUserProfile(usageFrequency: UsageFrequency.occasionally);
+    }
   }
 
   // Helper Methods

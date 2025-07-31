@@ -11,14 +11,15 @@ class SobrietyCounterCard extends StatelessWidget {
     return Consumer<AppStateProvider>(
       builder: (context, provider, child) {
         final stats = provider.sobrietyStats;
-        
+
         return Container(
           margin: const EdgeInsets.only(top: AppConstants.paddingLarge),
           child: Card(
             child: Container(
               decoration: BoxDecoration(
                 gradient: AppConstants.purpleGradient,
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusXLarge),
+                borderRadius:
+                    BorderRadius.circular(AppConstants.borderRadiusXLarge),
               ),
               padding: const EdgeInsets.all(AppConstants.paddingLarge),
               child: Column(
@@ -31,9 +32,9 @@ class SobrietyCounterCard extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  
+
                   const SizedBox(height: AppConstants.paddingMedium),
-                  
+
                   Text(
                     stats?.days.toString() ?? '0',
                     style: const TextStyle(
@@ -42,26 +43,27 @@ class SobrietyCounterCard extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  
-                  const SizedBox(height: AppConstants.paddingSmall),
-                  
-                  Text(
-                    stats != null 
-                        ? '${stats.days} day${stats.days != 1 ? 's' : ''}'
-                        : '0 days',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                  ),
-                  
+
+                  // Removed the SizedBox and Text widget below this line
+                  // const SizedBox(height: AppConstants.paddingSmall),
+                  //
+                  // Text(
+                  //   stats != null
+                  //       ? '${stats.days} day${stats.days != 1 ? 's' : ''}'
+                  //       : '0 days',
+                  //   style: TextStyle(
+                  //     fontSize: AppConstants.fontSizeLarge,
+                  //     color: Colors.white.withOpacity(0.9),
+                  //   ),
+                  // ),
+
                   const SizedBox(height: AppConstants.paddingLarge),
-                  
+
                   if (!provider.hasSoberDate)
                     ElevatedButton(
                       onPressed: () => _showDatePicker(context, provider),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withValues(alpha: 0.2),
+                        backgroundColor: Colors.white.withOpacity(0.2),
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white, width: 1),
                       ),
@@ -85,7 +87,8 @@ class SobrietyCounterCard extends StatelessWidget {
     );
   }
 
-  Future<void> _showDatePicker(BuildContext context, AppStateProvider provider) async {
+  Future<void> _showDatePicker(
+      BuildContext context, AppStateProvider provider) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: provider.userProfile?.soberDate ?? DateTime.now(),
@@ -108,7 +111,7 @@ class SobrietyCounterCard extends StatelessWidget {
 
     if (picked != null) {
       await provider.updateSoberDate(picked);
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

@@ -4,7 +4,6 @@ import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
 import '../widgets/sobriety_counter_card.dart';
 import '../widgets/daily_quote_card.dart';
-import '../widgets/stats_cards.dart';
 import '../widgets/daily_checkin_card.dart';
 import '../widgets/app_header.dart';
 
@@ -71,8 +70,236 @@ class _HomeScreenState extends State<HomeScreen> {
                       
                       const SizedBox(height: AppConstants.paddingLarge),
                       
-                      // Stats Cards (Money Saved & Milestones)
-                      const StatsCards(),
+                      // Enhanced Milestones Card
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Header with achievements count
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: AppConstants.lightBlue,
+                                          borderRadius: BorderRadius.circular(
+                                              AppConstants.borderRadiusSmall),
+                                        ),
+                                        child: const Icon(
+                                          Icons.emoji_events_outlined,
+                                          color: AppConstants.blueAccent,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(width: AppConstants.paddingMedium),
+                                      const Text(
+                                        'Milestones',
+                                        style: TextStyle(
+                                          fontSize: AppConstants.fontSizeMedium,
+                                          color: AppConstants.textGray,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppConstants.paddingSmall,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppConstants.blueAccent.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                                    ),
+                                    child: Text(
+                                      '${provider.achievedMilestonesCount} unlocked',
+                                      style: const TextStyle(
+                                        fontSize: AppConstants.fontSizeSmall,
+                                        color: AppConstants.blueAccent,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              
+                              const SizedBox(height: AppConstants.paddingLarge),
+                              
+                              // Next milestone section
+                              if (provider.nextMilestone != null) ...[
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 3,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: AppConstants.blueAccent,
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppConstants.paddingSmall),
+                                    const Text(
+                                      'Next Goal',
+                                      style: TextStyle(
+                                        fontSize: AppConstants.fontSizeSmall,
+                                        color: AppConstants.textGray,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                
+                                const SizedBox(height: AppConstants.paddingSmall),
+                                
+                                // Next milestone info
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${provider.nextMilestone!.days} Days',
+                                            style: const TextStyle(
+                                              fontSize: AppConstants.fontSizeXLarge,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppConstants.blueAccent,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            provider.nextMilestone!.benefit,
+                                            style: const TextStyle(
+                                              fontSize: AppConstants.fontSizeSmall,
+                                              color: AppConstants.textGray,
+                                              height: 1.3,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    
+                                    const SizedBox(width: AppConstants.paddingMedium),
+                                    
+                                    // Days remaining
+                                    Container(
+                                      padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                                      decoration: BoxDecoration(
+                                        color: AppConstants.primaryPurple.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '${provider.getDaysUntilMilestone(provider.nextMilestone!.days)}',
+                                            style: const TextStyle(
+                                              fontSize: AppConstants.fontSizeXLarge,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppConstants.primaryPurple,
+                                            ),
+                                          ),
+                                          Text(
+                                            'days to go',
+                                            style: TextStyle(
+                                              fontSize: AppConstants.fontSizeSmall,
+                                              color: AppConstants.primaryPurple.withValues(alpha: 0.8),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                
+                                const SizedBox(height: AppConstants.paddingMedium),
+                                
+                                // Progress bar
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Progress',
+                                          style: TextStyle(
+                                            fontSize: AppConstants.fontSizeSmall,
+                                            color: AppConstants.textGray.withValues(alpha: 0.8),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${(provider.getMilestoneProgress(provider.nextMilestone!.days) * 100).toInt()}%',
+                                          style: const TextStyle(
+                                            fontSize: AppConstants.fontSizeSmall,
+                                            color: AppConstants.blueAccent,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: LinearProgressIndicator(
+                                        value: provider.getMilestoneProgress(provider.nextMilestone!.days),
+                                        backgroundColor: AppConstants.borderGray,
+                                        valueColor: const AlwaysStoppedAnimation<Color>(AppConstants.blueAccent),
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ] else ...[
+                                // All milestones achieved
+                                Container(
+                                  padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                                  decoration: BoxDecoration(
+                                    color: AppConstants.successGreen.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const Icon(
+                                        Icons.celebration,
+                                        color: AppConstants.successGreen,
+                                        size: 32,
+                                      ),
+                                      const SizedBox(height: AppConstants.paddingSmall),
+                                      const Text(
+                                        'All Milestones Achieved!',
+                                        style: TextStyle(
+                                          fontSize: AppConstants.fontSizeLarge,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppConstants.successGreen,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Congratulations on your incredible journey!',
+                                        style: TextStyle(
+                                          fontSize: AppConstants.fontSizeSmall,
+                                          color: AppConstants.successGreen.withValues(alpha: 0.8),
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
                       
                       const SizedBox(height: AppConstants.paddingLarge),
                       
@@ -223,4 +450,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 }

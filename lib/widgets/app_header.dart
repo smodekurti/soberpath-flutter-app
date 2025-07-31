@@ -52,36 +52,54 @@ class AppHeader extends StatelessWidget {
                         ],
                       ),
                       
-                      if (stats != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppConstants.paddingMedium,
-                            vertical: AppConstants.paddingSmall,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: .2),
-                            borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                '${stats.days}',
-                                style: const TextStyle(
-                                  fontSize: AppConstants.fontSizeXLarge,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                'days strong',
-                                style: TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
-                                  color: Colors.white.withValues(alpha: .9),
-                                ),
-                              ),
-                            ],
-                          ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.paddingMedium,
+                          vertical: AppConstants.paddingSmall,
                         ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: .2),
+                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: .3),
+                                borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                              ),
+                              child: const Icon(
+                                Icons.savings_outlined,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(width: AppConstants.paddingSmall),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '\$${provider.moneySaved.toStringAsFixed(0)}',
+                                  style: const TextStyle(
+                                    fontSize: AppConstants.fontSizeLarge,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'saved',
+                                  style: TextStyle(
+                                    fontSize: AppConstants.fontSizeSmall,
+                                    color: Colors.white.withValues(alpha: .9),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],
