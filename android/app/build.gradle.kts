@@ -8,17 +8,19 @@ plugins {
 android {
     namespace = "com.example.soberpath_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
+    ndkVersion = "27.0.12077973"
+    
     compileOptions {
+        // Enable core library desugaring for flutter_local_notifications
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
+    
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = "11"
     }
-
+    
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.soberpath_app"
@@ -28,8 +30,14 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Optimize for better performance
+        multiDexEnabled = true
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
-
+    
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -41,4 +49,12 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Core library desugaring for modern Java features
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    
+    // MultiDex support for apps with large number of methods
+    implementation("androidx.multidex:multidex:2.0.1")
 }

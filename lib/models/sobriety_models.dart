@@ -266,6 +266,10 @@ class UserProfile {
   double calculateMoneySaved() {
     if (soberDate == null) return 0.0;
     final stats = SobrietyStats.calculateFromDate(soberDate!);
+    // Calculate money saved based on usage frequency and daily cost
+    // dailyCost is what they spent per day when using
+    // usageFrequency.multiplier represents how often they used (daily = 1.0, etc.)
+    // Money saved = days sober * daily cost * frequency factor
     return stats.days * dailyCost * usageFrequency.multiplier;
   }
 

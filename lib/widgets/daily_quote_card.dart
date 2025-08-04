@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class DailyQuoteCard extends StatelessWidget {
   const DailyQuoteCard({super.key});
@@ -48,27 +49,29 @@ class DailyQuoteCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        SafeText(
                           provider.todaysQuote,
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
+                          style: TextStyle(
+                            fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                context, AppConstants.fontSizeLarge),
                             fontStyle: FontStyle.italic,
                             color: AppConstants.blueAccent,
                             height: 1.4,
                           ),
-                          maxLines: null, // Allow unlimited lines
-                          overflow: TextOverflow.visible, // Ensure text doesn't get cut off
+                          maxLines: 6, // Allow reasonable number of lines
                         ),
                         
                         const SizedBox(height: AppConstants.paddingSmall),
                         
-                        Text(
+                        SafeText(
                           'Daily Inspiration',
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeMedium,
+                            fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                context, AppConstants.fontSizeMedium),
                             color: AppConstants.blueAccent.withValues(alpha: 0.8),
                             fontWeight: FontWeight.w500,
                           ),
+                          maxLines: 1,
                         ),
                       ],
                     ),

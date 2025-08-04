@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants/app_constants.dart';
 import 'home_screen.dart';
 import 'journal_screen.dart';
 import 'progress_screen.dart';
-import 'support_screen.dart';
-import 'meetings_screen.dart';
+import 'help_connect_screen.dart';
+import 'settings_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final int initialIndex; // Add this parameter for notification navigation
+
+  const MainNavigationScreen({
+    super.key,
+    this.initialIndex = 0, // Add this parameter
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _currentIndex = 0;
+  late int _currentIndex; // Change to late
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const JournalScreen(),
-    const ProgressScreen(),
-    const SupportScreen(),
-    const MeetingsScreen(),
-  ];
+  // Add method to handle navigation from notifications
+  void navigateToCheckIn() {
+    setState(() {
+      _currentIndex = 0; // Navigate to Home screen where daily check-in is
+    });
+  }
+
+  late final List<Widget> _screens;
 
   final List<NavigationItem> _navigationItems = [
     NavigationItem(
@@ -42,16 +47,31 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       label: 'Progress',
     ),
     NavigationItem(
-      icon: Icons.favorite_outline,
-      activeIcon: Icons.favorite,
-      label: 'Support',
+      icon: Icons.help_outline,
+      activeIcon: Icons.help,
+      label: 'Help & Connect',
     ),
     NavigationItem(
-      icon: Icons.people_outline,
-      activeIcon: Icons.people,
-      label: 'Meetings',
+      icon: Icons.settings_outlined,
+      activeIcon: Icons.settings,
+      label: 'Settings',
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex; // Initialize with provided index
+
+    // Initialize screens
+    _screens = [
+      const HomeScreen(),
+      const JournalScreen(),
+      const ProgressScreen(),
+      const HelpConnectScreen(),
+      const SettingsScreen(),
+    ];
+  }
 
   void _onTabTapped(int index) {
     setState(() {
@@ -106,7 +126,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                         color: isSelected
                             ? AppConstants.primaryPurple.withValues(alpha: 0.5)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                        borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadiusMedium),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -128,8 +149,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                             child: Text(
                               item.label,
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeSmall - 1, // Smaller font
-                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                                fontSize: AppConstants.fontSizeSmall -
+                                    1, // Smaller font
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
                                 color: isSelected
                                     ? AppConstants.primaryPurple
                                     : AppConstants.textGray,

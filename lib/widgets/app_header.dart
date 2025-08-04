@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
@@ -10,7 +11,6 @@ class AppHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppStateProvider>(
       builder: (context, provider, child) {
-        final stats = provider.sobrietyStats;
         
         return Container(
           decoration: const BoxDecoration(
@@ -31,25 +31,31 @@ class AppHeader extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            AppConstants.appName,
-                            style: TextStyle(
-                              fontSize: AppConstants.fontSizeXXLarge,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SafeText(
+                              AppConstants.appName,
+                              style: TextStyle(
+                                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                    context, AppConstants.fontSizeXXLarge),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              maxLines: 1,
                             ),
-                          ),
-                          Text(
-                            AppConstants.appTagline,
-                            style: TextStyle(
-                              fontSize: AppConstants.fontSizeMedium,
-                              color: Colors.white.withValues(alpha: .9),
+                            SafeText(
+                              AppConstants.appTagline,
+                              style: TextStyle(
+                                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                    context, AppConstants.fontSizeMedium),
+                                color: Colors.white.withValues(alpha: .9),
+                              ),
+                              maxLines: 2,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       
                       Container(
@@ -80,20 +86,26 @@ class AppHeader extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                AutoSizeText(
                                   '\$${provider.moneySaved.toStringAsFixed(0)}',
-                                  style: const TextStyle(
-                                    fontSize: AppConstants.fontSizeLarge,
+                                  style: TextStyle(
+                                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                        context, AppConstants.fontSizeLarge),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
+                                  maxLines: 1,
+                                  minFontSize: 12,
+                                  maxFontSize: 18,
                                 ),
-                                Text(
+                                SafeText(
                                   'saved',
                                   style: TextStyle(
-                                    fontSize: AppConstants.fontSizeSmall,
+                                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                        context, AppConstants.fontSizeSmall),
                                     color: Colors.white.withValues(alpha: .9),
                                   ),
+                                  maxLines: 1,
                                 ),
                               ],
                             ),

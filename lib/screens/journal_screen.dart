@@ -65,7 +65,7 @@ class _JournalScreenState extends State<JournalScreen> {
                               'Your daily reflections',
                               style: TextStyle(
                                 fontSize: AppConstants.fontSizeLarge,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                           ],
@@ -373,7 +373,7 @@ class _JournalScreenState extends State<JournalScreen> {
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingMedium),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
       ),
       child: Column(

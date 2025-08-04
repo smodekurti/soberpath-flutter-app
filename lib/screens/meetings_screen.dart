@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class MeetingsScreen extends StatefulWidget {
   const MeetingsScreen({super.key});
@@ -327,20 +328,28 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  SafeText(
                     title,
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                          context, AppConstants.fontSizeLarge),
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Text(
+                  const SizedBox(height: 4),
+                  SafeText(
                     description,
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                          context, AppConstants.fontSizeMedium),
                       color: color,
+                      height: 1.3,
                     ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -892,7 +901,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

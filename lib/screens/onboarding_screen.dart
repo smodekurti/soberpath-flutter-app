@@ -139,165 +139,231 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isLargeScreen = screenHeight > 800;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           gradient: AppConstants.purpleGradient,
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(AppConstants.paddingLarge),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (_currentPage > 0)
-                      IconButton(
-                        onPressed: _previousPage,
-                        icon: const Icon(Icons.arrow_back_ios,
-                            color: Colors.white),
-                      )
-                    else
-                      const SizedBox(width: 48),
-                    Text(
-                      'Setup Your Profile',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: AppConstants.fontSizeXLarge,
-                        fontWeight: FontWeight.w600,
-                      ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  // Header - Fixed height
+                  Container(
+                    height: isLargeScreen ? 80 : 70,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelpers.getResponsivePadding(
+                          context, AppConstants.paddingLarge),
+                      vertical: ResponsiveHelpers.getResponsivePadding(
+                          context, AppConstants.paddingMedium),
                     ),
-                    const SizedBox(width: 48),
-                  ],
-                ),
-              ),
-
-              // Progress Indicator
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.paddingLarge),
-                child: Row(
-                  children: List.generate(3, (index) {
-                    return Expanded(
-                      child: Container(
-                        height: 4,
-                        margin: EdgeInsets.only(
-                          right: index < 2 ? AppConstants.paddingSmall : 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 48,
+                          child: _currentPage > 0
+                              ? IconButton(
+                                  onPressed: _previousPage,
+                                  icon: const Icon(Icons.arrow_back_ios,
+                                      color: Colors.white),
+                                )
+                              : null,
                         ),
-                        decoration: BoxDecoration(
-                          color: index <= _currentPage
-                              ? Colors.white
-                              : Colors.white.withValues(alpha: .3),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-
-              // Content
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (page) {
-                    setState(() {
-                      _currentPage = page;
-                    });
-                  },
-                  children: [
-                    _buildWelcomePage(),
-                    _buildPersonalInfoPage(),
-                    _buildSobrietyDetailsPage(),
-                  ],
-                ),
-              ),
-
-              // Navigation Button
-              Padding(
-                padding: const EdgeInsets.all(AppConstants.paddingLarge),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _nextPage,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: AppConstants.primaryPurple,
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppConstants.primaryPurple,
-                              ),
+                        Expanded(
+                          child: SafeText(
+                            'Setup Your Profile',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                  context, AppConstants.fontSizeXLarge),
+                              fontWeight: FontWeight.w600,
                             ),
-                          )
-                        : Text(_currentPage == 2
-                            ? 'Start Your Journey'
-                            : 'Continue'),
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(width: 48),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            ],
+
+                  // Progress Indicator - Fixed height
+                  Container(
+                    height: 20,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveHelpers.getResponsivePadding(
+                            context, AppConstants.paddingLarge)),
+                    child: Row(
+                      children: List.generate(3, (index) {
+                        return Expanded(
+                          child: Container(
+                            height: 4,
+                            margin: EdgeInsets.only(
+                              right: index < 2 ? AppConstants.paddingSmall : 0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: index <= _currentPage
+                                  ? Colors.white
+                                  : Colors.white.withValues(alpha: .3),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+
+                  // Content - Flexible height with proper constraints
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(
+                        maxHeight:
+                            constraints.maxHeight - (isLargeScreen ? 180 : 160),
+                      ),
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (page) {
+                          setState(() {
+                            _currentPage = page;
+                          });
+                        },
+                        children: [
+                          _buildWelcomePage(constraints),
+                          _buildPersonalInfoPage(constraints),
+                          _buildSobrietyDetailsPage(constraints),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Navigation Button - Fixed height
+                  Container(
+                    height: isLargeScreen ? 90 : 70,
+                    padding: EdgeInsets.all(
+                        ResponsiveHelpers.getResponsivePadding(
+                            context, AppConstants.paddingLarge)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: GestureDetector(
+                        onTap: _isLoading ? null : _nextPage,
+                        child: Container(
+                          width: double.infinity,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(
+                                AppConstants.borderRadiusLarge),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppConstants.primaryPurple,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    _currentPage == 2
+                                        ? 'Start Your Journey'
+                                        : 'Continue',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: ResponsiveHelpers
+                                          .getResponsiveFontSize(context, 14.0),
+                                      fontWeight: FontWeight.bold,
+                                      color: AppConstants.primaryPurple,
+                                      height: 1.0,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildWelcomePage() {
-    return Padding(
-      padding: const EdgeInsets.all(AppConstants.paddingLarge),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .2),
-              borderRadius: BorderRadius.circular(25),
+  Widget _buildWelcomePage(BoxConstraints constraints) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
+          context, AppConstants.paddingMedium)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight - 100,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: .2),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: const Icon(
+                Icons.favorite,
+                size: 50,
+                color: Colors.white,
+              ),
             ),
-            child: const Icon(
-              Icons.favorite,
-              size: 50,
-              color: Colors.white,
+            SizedBox(
+                height: ResponsiveHelpers.getResponsivePadding(
+                    context, AppConstants.paddingLarge)),
+            SafeText(
+              'Welcome to SoberPath',
+              style: TextStyle(
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeXXLarge),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
             ),
-          ),
-          SizedBox(
-              height: ResponsiveHelpers.getResponsivePadding(
-                  context, AppConstants.paddingLarge)),
-          const Text(
-            'Welcome to SoberPath',
-            style: TextStyle(
-              fontSize: AppConstants.fontSizeXXLarge,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+            SizedBox(
+                height: ResponsiveHelpers.getResponsivePadding(
+                    context, AppConstants.paddingLarge)),
+            SafeText(
+              'Your personal companion for recovery and sobriety tracking. Let\'s set up your profile to get started.',
+              style: TextStyle(
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                    context, AppConstants.fontSizeLarge),
+                color: Colors.white.withValues(alpha: .9),
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 4,
             ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-              height: ResponsiveHelpers.getResponsivePadding(
-                  context, AppConstants.paddingLarge)),
-          Text(
-            'Your personal companion for recovery and sobriety tracking. Let\'s set up your profile to get started.',
-            style: TextStyle(
-              fontSize: AppConstants.fontSizeLarge,
-              color: Colors.white.withValues(alpha: .9),
-              height: 1.5,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-              height: ResponsiveHelpers.getResponsivePadding(
-                  context, AppConstants.paddingLarge)),
-          _buildFeatureList(),
-        ],
+            SizedBox(
+                height: ResponsiveHelpers.getResponsivePadding(
+                    context, AppConstants.paddingLarge)),
+            _buildFeatureList(),
+          ],
+        ),
       ),
     );
   }
@@ -313,8 +379,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Column(
       children: features.map((feature) {
         return Padding(
-          padding:
-              const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
+          padding: EdgeInsets.symmetric(
+              vertical: ResponsiveHelpers.getResponsivePadding(
+                  context, AppConstants.paddingSmall)),
           child: Row(
             children: [
               Container(
@@ -325,14 +392,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: AppConstants.paddingMedium),
+              SizedBox(
+                  width: ResponsiveHelpers.getResponsivePadding(
+                      context, AppConstants.paddingMedium)),
               Expanded(
-                child: Text(
+                child: SafeText(
                   feature,
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeMedium,
+                    fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                        context, AppConstants.fontSizeMedium),
                     color: Colors.white.withValues(alpha: .9),
                   ),
+                  maxLines: 2,
                 ),
               ),
             ],
@@ -342,11 +413,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildPersonalInfoPage() {
-    return Padding(
+  Widget _buildPersonalInfoPage(BoxConstraints constraints) {
+    return SingleChildScrollView(
       padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-          context, AppConstants.paddingLarge)),
-      child: SingleChildScrollView(
+          context, AppConstants.paddingMedium)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight - 100,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -362,6 +436,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
+              maxLines: 2,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -373,7 +448,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     context, AppConstants.fontSizeLarge),
                 color: Colors.white.withValues(alpha: .9),
               ),
-              maxLines: 2,
+              maxLines: 3,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -388,6 +463,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
+              maxLines: 2,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -411,13 +487,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               'What substance are you recovering from?',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, AppConstants.fontSizeMedium),
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
-              maxLines: 2,
-              minFontSize: 14,
-              maxFontSize: AppConstants.fontSizeLarge,
+              maxLines: 3,
+              minFontSize: 12,
+              maxFontSize: AppConstants.fontSizeMedium,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -430,6 +506,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               child: DropdownButtonFormField<String>(
                 value: _selectedSubstance,
+                isExpanded: true,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
@@ -440,9 +517,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 items: _substanceOptions.map((substance) {
                   return DropdownMenuItem(
                     value: substance,
-                    child: Text(
+                    child: SafeText(
                       substance[0].toUpperCase() + substance.substring(1),
                       style: const TextStyle(color: Colors.black),
+                      maxLines: 1,
                     ),
                   );
                 }).toList(),
@@ -461,11 +539,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildSobrietyDetailsPage() {
-    return Padding(
+  Widget _buildSobrietyDetailsPage(BoxConstraints constraints) {
+    return SingleChildScrollView(
       padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
           context, AppConstants.paddingMedium)),
-      child: SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight - 100,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -477,10 +558,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               'Sobriety Details',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeXLarge),
+                    context, AppConstants.fontSizeXXLarge),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
+              maxLines: 2,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -489,7 +571,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               'Help us track your progress and savings.',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, AppConstants.fontSizeMedium),
                 color: Colors.white.withValues(alpha: .9),
               ),
             ),
@@ -529,15 +611,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _selectedSoberDate != null
-                          ? '${_selectedSoberDate!.day}/${_selectedSoberDate!.month}/${_selectedSoberDate!.year}'
-                          : 'Select date (optional)',
-                      style: TextStyle(
-                        color: _selectedSoberDate != null
-                            ? Colors.black
-                            : Colors.grey[600],
-                        fontSize: AppConstants.fontSizeLarge,
+                    Expanded(
+                      child: SafeText(
+                        _selectedSoberDate != null
+                            ? '${_selectedSoberDate!.day}/${_selectedSoberDate!.month}/${_selectedSoberDate!.year}'
+                            : 'Select date (optional)',
+                        style: TextStyle(
+                          color: _selectedSoberDate != null
+                              ? Colors.black
+                              : Colors.grey[600],
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                              context, AppConstants.fontSizeMedium),
+                        ),
+                        maxLines: 1,
                       ),
                     ),
                     Icon(
@@ -562,6 +648,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
+              maxLines: 2,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
@@ -574,6 +661,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               child: DropdownButtonFormField<UsageFrequency>(
                 value: _selectedUsageFrequency,
+                isExpanded: true,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
@@ -585,9 +673,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   return DropdownMenuItem(
                     value: frequency,
                     child: SafeText(
-                      // Using SafeText here
                       frequency.label,
                       style: const TextStyle(color: Colors.black),
+                      maxLines: 1,
                     ),
                   );
                 }).toList(),
@@ -609,26 +697,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AutoSizeText(
-                  'How much did you spend per day when using?',
+                SafeText(
+                  'How much did you spend per day on the days you actually used?',
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
                         context, AppConstants.fontSizeLarge),
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
-                  maxLines: 2,
-                  minFontSize: 14,
-                  maxFontSize: AppConstants.fontSizeLarge,
+                  maxLines: 3,
                 ),
                 SizedBox(height: 4),
-                Text(
+                SafeText(
                   '(optional)',
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                        context, AppConstants.fontSizeMedium),
+                        context, AppConstants.fontSizeSmall),
                     color: Colors.white.withValues(alpha: .7),
                   ),
+                  maxLines: 1,
                 ),
               ],
             ),
@@ -667,16 +754,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(width: AppConstants.paddingMedium),
                   Expanded(
-                    child: AutoSizeText(
+                    child: SafeText(
                       'We\'ll calculate your savings based on your usage frequency and daily spending.',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: .9),
                         fontSize: ResponsiveHelpers.getResponsiveFontSize(
                             context, AppConstants.fontSizeMedium),
                       ),
-                      maxLines: 3,
-                      minFontSize: 12,
-                      maxFontSize: AppConstants.fontSizeMedium,
+                      maxLines: 4,
                     ),
                   ),
                 ],

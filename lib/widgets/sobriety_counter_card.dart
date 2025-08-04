@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class SobrietyCounterCard extends StatelessWidget {
   const SobrietyCounterCard({super.key});
@@ -24,24 +25,30 @@ class SobrietyCounterCard extends StatelessWidget {
               padding: const EdgeInsets.all(AppConstants.paddingLarge),
               child: Column(
                 children: [
-                  const Text(
+                  SafeText(
                     'Days Sober',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeXLarge,
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                          context, AppConstants.fontSizeXLarge),
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
+                    maxLines: 1,
                   ),
 
                   const SizedBox(height: AppConstants.paddingMedium),
 
-                  Text(
+                  AutoSizeText(
                     stats?.days.toString() ?? '0',
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeDisplay,
+                    style: TextStyle(
+                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                          context, AppConstants.fontSizeDisplay),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
+                    maxLines: 1,
+                    minFontSize: 24,
+                    maxFontSize: 72,
                   ),
 
                   // Removed the SizedBox and Text widget below this line
@@ -63,11 +70,11 @@ class SobrietyCounterCard extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => _showDatePicker(context, provider),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withOpacity(0.2),
+                        backgroundColor: Colors.white.withValues(alpha: 0.2),
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white, width: 1),
                       ),
-                      child: const Text('Set Sobriety Date'),
+                      child: const SafeText('Set Sobriety Date', maxLines: 1),
                     )
                   else
                     OutlinedButton(
@@ -76,7 +83,8 @@ class SobrietyCounterCard extends StatelessWidget {
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white),
                       ),
-                      child: const Text('Change Date'),
+                      child: const SafeText('Change Date',
+                          style: TextStyle(color: Colors.white), maxLines: 1),
                     ),
                 ],
               ),

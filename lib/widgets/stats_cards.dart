@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class StatsCards extends StatelessWidget {
   const StatsCards({super.key});
@@ -36,41 +37,42 @@ class StatsCards extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: AppConstants.paddingMedium),
-                          const Expanded(
-                            child: Text(
+                          Expanded(
+                            child: SafeText(
                               'Money Saved',
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeMedium,
+                                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                    context, AppConstants.fontSizeMedium),
                                 color: AppConstants.textGray,
                                 fontWeight: FontWeight.w500,
                               ),
                               maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppConstants.paddingMedium),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          '\$${provider.moneySaved.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeXXLarge,
-                            fontWeight: FontWeight.bold,
-                            color: AppConstants.successGreen,
-                          ),
+                      AutoSizeText(
+                        '\$${provider.moneySaved.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                              context, AppConstants.fontSizeXXLarge),
+                          fontWeight: FontWeight.bold,
+                          color: AppConstants.successGreen,
                         ),
+                        maxLines: 1,
+                        minFontSize: 16,
+                        maxFontSize: 32,
                       ),
                       const SizedBox(height: AppConstants.paddingSmall),
-                      Text(
-                        'Est. \$${(provider.userProfile!.dailyCost * (provider.userProfile?.usageFrequency.multiplier ?? 1.0)).toStringAsFixed(0) ?? "15"}/day avg',
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
+                      SafeText(
+                        'Est. \$${(provider.userProfile!.dailyCost * (provider.userProfile?.usageFrequency.multiplier ?? 1.0)).toStringAsFixed(0)}/day avg',
+                        style: TextStyle(
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                              context, AppConstants.fontSizeSmall),
                           color: AppConstants.textGray,
                         ),
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -104,41 +106,42 @@ class StatsCards extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: AppConstants.paddingMedium),
-                          const Expanded(
-                            child: Text(
+                          Expanded(
+                            child: SafeText(
                               'Milestones',
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeMedium,
+                                fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                                    context, AppConstants.fontSizeMedium),
                                 color: AppConstants.textGray,
                                 fontWeight: FontWeight.w500,
                               ),
                               maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: AppConstants.paddingMedium),
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          '${provider.achievedMilestonesCount}',
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeXXLarge,
-                            fontWeight: FontWeight.bold,
-                            color: AppConstants.blueAccent,
-                          ),
+                      AutoSizeText(
+                        '${provider.achievedMilestonesCount}',
+                        style: TextStyle(
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                              context, AppConstants.fontSizeXXLarge),
+                          fontWeight: FontWeight.bold,
+                          color: AppConstants.blueAccent,
                         ),
+                        maxLines: 1,
+                        minFontSize: 16,
+                        maxFontSize: 32,
                       ),
                       const SizedBox(height: AppConstants.paddingSmall),
-                      const Text(
+                      SafeText(
                         'Achievements unlocked',
                         style: TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
+                          fontSize: ResponsiveHelpers.getResponsiveFontSize(
+                              context, AppConstants.fontSizeSmall),
                           color: AppConstants.textGray,
                         ),
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),

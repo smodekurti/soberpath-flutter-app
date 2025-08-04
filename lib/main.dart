@@ -1,14 +1,18 @@
+// Add this to your main.dart file
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:soberpath_app/screens/home_screen.dart';
 
 import 'services/app_state_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_navigation_screen.dart';
 import 'constants/app_constants.dart';
+
+// Add this global navigator key
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   runApp(const SoberPathApp());
@@ -24,16 +28,20 @@ class SoberPathApp extends StatelessWidget {
       child: MaterialApp(
         title: AppConstants.appName,
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey, // Add this line
         theme: _buildTheme(),
         home: const AppInitializer(),
         routes: {
-          '/checkIn': (context) =>
-              const MainNavigationScreen(), // Define the route
+          '/checkIn': (context) => const MainNavigationScreen(initialIndex: 0),
+          '/progress': (context) => const MainNavigationScreen(initialIndex: 2),
+          '/support': (context) => const MainNavigationScreen(initialIndex: 3),
+          '/home': (context) => const MainNavigationScreen(initialIndex: 0),
         },
       ),
     );
   }
 
+  // Your existing _buildTheme() method stays the same
   ThemeData _buildTheme() {
     return ThemeData(
       useMaterial3: true,
@@ -140,8 +148,7 @@ class SoberPathApp extends StatelessWidget {
         activeTrackColor: AppConstants.primaryPurple,
         inactiveTrackColor: AppConstants.borderGray,
         thumbColor: AppConstants.primaryPurple,
-        // ignore: deprecated_member_use
-        overlayColor: AppConstants.primaryPurple.withOpacity(0.2),
+        overlayColor: AppConstants.primaryPurple.withValues(alpha: 0.2),
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
         trackHeight: 4,
@@ -161,7 +168,10 @@ class _AppInitializerState extends State<AppInitializer> {
   @override
   void initState() {
     super.initState();
-    _initializeApp();
+    // Defer initialization until after the build phase to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeApp();
+    });
   }
 
   Future<void> _initializeApp() async {

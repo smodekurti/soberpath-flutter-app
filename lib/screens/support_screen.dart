@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../constants/app_constants.dart';
+import '../utils/responsive_helpers.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});
@@ -31,21 +30,23 @@ class SupportScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text(
+                        SafeText(
                           'Support',
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeTitle,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
+                          maxLines: 1,
                         ),
                         const SizedBox(height: AppConstants.paddingSmall),
-                        Text(
-                          'Get help when you need it',
+                        SafeText(
+                          'Resources for your recovery journey',
                           style: TextStyle(
                             fontSize: AppConstants.fontSizeLarge,
                             color: Colors.white.withValues(alpha: .9),
                           ),
+                          maxLines: 2,
                         ),
                       ],
                     ),
@@ -70,18 +71,13 @@ class SupportScreen extends StatelessWidget {
                 
                 const SizedBox(height: AppConstants.paddingLarge),
                 
-                // Coping Strategies Section
-                _buildCopingStrategiesCard(),
+                // Professional Help Section
+                _buildProfessionalHelpCard(),
                 
                 const SizedBox(height: AppConstants.paddingLarge),
                 
-                // Helpful Apps Section
-                _buildHelpfulAppsCard(),
-                
-                const SizedBox(height: AppConstants.paddingLarge),
-                
-                // Inspirational Content
-                _buildInspirationalContentCard(),
+                // Community Support Section
+                _buildCommunitySupportCard(),
               ]),
             ),
           ),
@@ -92,143 +88,63 @@ class SupportScreen extends StatelessWidget {
 
   Widget _buildCrisisSupportCard() {
     return Card(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppConstants.lightRed,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusXLarge),
-          border: Border.all(color: AppConstants.dangerRed.withValues(alpha: .3)),
-        ),
+      child: Padding(
         padding: const EdgeInsets.all(AppConstants.paddingLarge),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            FlexibleRow(
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.dangerRed,
+                    color: AppConstants.lightRed,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
                     Icons.emergency,
-                    color: Colors.white,
+                    color: AppConstants.dangerRed,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Crisis Support',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.dangerRed,
+                Flexible(
+                  child: SafeText(
+                    'Crisis Support',
+                    style: TextStyle(
+                      fontSize: AppConstants.fontSizeXLarge,
+                      fontWeight: FontWeight.bold,
+                      color: AppConstants.textDark,
+                    ),
+                    maxLines: 1,
                   ),
                 ),
               ],
             ),
-            
-            const SizedBox(height: AppConstants.paddingMedium),
-            
-            const Text(
-              'If you\'re in crisis, reach out immediately:',
-              style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
-                color: AppConstants.dangerRed,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
-            ...AppConstants.crisisSupport.entries.map((entry) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
-                child: _buildCrisisContactItem(entry.key, entry.value),
-              );
-            }),
-            
-            const SizedBox(height: AppConstants.paddingMedium),
-            
-            Container(
-              padding: const EdgeInsets.all(AppConstants.paddingMedium),
-              decoration: BoxDecoration(
-                color: AppConstants.dangerRed.withValues(alpha: .1),
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-              ),
-              child: Row(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Icon(
-                    Icons.info_outline,
-                    color: AppConstants.dangerRed,
-                    size: 20,
-                  ),
-                  const SizedBox(width: AppConstants.paddingMedium),
-                  const Expanded(
-                    child: Text(
-                      'Remember: You are not alone. Crisis support is available 24/7.',
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
-                        color: AppConstants.dangerRed,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            _buildSupportItem(
+              'National Suicide Prevention Lifeline',
+              '988',
+              'Available 24/7 for crisis support',
+              () => _makePhoneCall('988'),
+              Icons.phone,
+              AppConstants.dangerRed,
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCrisisContactItem(String title, String contact) {
-    return GestureDetector(
-      onTap: () => _handleContactTap(contact),
-      child: Container(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-          border: Border.all(color: AppConstants.dangerRed.withOpacity(0.3)),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              contact.contains('Text') ? Icons.message : Icons.phone,
-              color: AppConstants.dangerRed,
-              size: 20,
+            _buildSupportItem(
+              'Crisis Text Line',
+              'Text HOME to 741741',
+              'Free 24/7 crisis support via text',
+              () => _sendText('741741', 'HOME'),
+              Icons.message,
+              AppConstants.warningYellow,
             ),
-            const SizedBox(width: AppConstants.paddingMedium),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
-                      fontWeight: FontWeight.w600,
-                      color: AppConstants.textDark,
-                    ),
-                  ),
-                  Text(
-                    contact,
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
-                      fontWeight: FontWeight.bold,
-                      color: AppConstants.dangerRed,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: AppConstants.dangerRed,
-              size: 16,
+            _buildSupportItem(
+              'SAMHSA National Helpline',
+              '1-800-662-4357',
+              'Treatment referral and information service',
+              () => _makePhoneCall('1-800-662-4357'),
+              Icons.support_agent,
+              AppConstants.blueAccent,
             ),
           ],
         ),
@@ -237,33 +153,6 @@ class SupportScreen extends StatelessWidget {
   }
 
   Widget _buildRecoveryResourcesCard() {
-    final resources = [
-      {
-        'title': 'Alcoholics Anonymous',
-        'description': 'Find local AA meetings and support',
-        'icon': Icons.people,
-        'color': AppConstants.blueAccent,
-      },
-      {
-        'title': 'SMART Recovery',
-        'description': 'Self-management and recovery training',
-        'icon': Icons.psychology,
-        'color': AppConstants.successGreen,
-      },
-      {
-        'title': 'Narcotics Anonymous',
-        'description': 'Support for substance recovery',
-        'icon': Icons.groups,
-        'color': AppConstants.primaryPurple,
-      },
-      {
-        'title': 'Online Support Groups',
-        'description': '24/7 chat and forum support',
-        'icon': Icons.forum,
-        'color': AppConstants.warningYellow,
-      },
-    ];
-
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.paddingLarge),
@@ -279,92 +168,55 @@ class SupportScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.support_agent,
+                    Icons.library_books,
                     color: AppConstants.successGreen,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SafeText(
                   'Recovery Resources',
                   style: TextStyle(
                     fontSize: AppConstants.fontSizeXLarge,
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textDark,
                   ),
+                  maxLines: 1,
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
-            ...resources.map((resource) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
-                child: _buildResourceItem(
-                  resource['title'] as String,
-                  resource['description'] as String,
-                  resource['icon'] as IconData,
-                  resource['color'] as Color,
-                ),
-              );
-            }),
+            _buildSupportItem(
+              'AA (Alcoholics Anonymous)',
+              'aa.org',
+              'Find meetings and resources',
+              () => _launchUrl('https://www.aa.org'),
+              Icons.group,
+              AppConstants.primaryPurple,
+            ),
+            _buildSupportItem(
+              'NA (Narcotics Anonymous)',
+              'na.org',
+              'Recovery from drug addiction',
+              () => _launchUrl('https://www.na.org'),
+              Icons.healing,
+              AppConstants.successGreen,
+            ),
+            _buildSupportItem(
+              'SMART Recovery',
+              'smartrecovery.org',
+              'Self-management and recovery training',
+              () => _launchUrl('https://www.smartrecovery.org'),
+              Icons.psychology,
+              AppConstants.blueAccent,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildResourceItem(String title, String description, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingMedium),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: AppConstants.paddingMedium),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeLarge,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-                ),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeMedium,
-                    color: color,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCopingStrategiesCard() {
+  Widget _buildProfessionalHelpCard() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.paddingLarge),
@@ -380,96 +232,47 @@ class SupportScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.lightbulb,
+                    Icons.medical_services,
                     color: AppConstants.blueAccent,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Coping Strategies',
+                SafeText(
+                  'Professional Help',
                   style: TextStyle(
                     fontSize: AppConstants.fontSizeXLarge,
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textDark,
                   ),
+                  maxLines: 1,
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
-            ...AppConstants.copingStrategies.map((strategy) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
-                child: _buildCopingStrategyItem(
-                  strategy['title']!,
-                  strategy['description']!,
-                ),
-              );
-            }),
+            _buildSupportItem(
+              'Find Treatment Facilities',
+              'SAMHSA Treatment Locator',
+              'Locate treatment facilities near you',
+              () => _launchUrl('https://findtreatment.samhsa.gov'),
+              Icons.location_on,
+              AppConstants.primaryPurple,
+            ),
+            _buildSupportItem(
+              'Psychology Today',
+              'Find Therapists & Counselors',
+              'Connect with mental health professionals',
+              () => _launchUrl('https://www.psychologytoday.com/us/therapists'),
+              Icons.person_search,
+              AppConstants.successGreen,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCopingStrategyItem(String title, String description) {
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingMedium),
-      decoration: BoxDecoration(
-        color: AppConstants.backgroundGray,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: AppConstants.fontSizeLarge,
-              fontWeight: FontWeight.bold,
-              color: AppConstants.textDark,
-            ),
-          ),
-          const SizedBox(height: AppConstants.paddingSmall),
-          Text(
-            description,
-            style: const TextStyle(
-              fontSize: AppConstants.fontSizeMedium,
-              color: AppConstants.textGray,
-              height: 1.4,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHelpfulAppsCard() {
-    final apps = [
-      {
-        'name': 'Headspace',
-        'description': 'Meditation and mindfulness',
-        'category': 'Meditation',
-      },
-      {
-        'name': 'Calm',
-        'description': 'Sleep stories and relaxation',
-        'category': 'Wellness',
-      },
-      {
-        'name': 'I Am Sober',
-        'description': 'Sobriety tracking and community',
-        'category': 'Recovery',
-      },
-      {
-        'name': 'Quit Genius',
-        'description': 'Cognitive behavioral therapy for addiction',
-        'category': 'Therapy',
-      },
-    ];
-
+  Widget _buildCommunitySupportCard() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppConstants.paddingLarge),
@@ -485,214 +288,132 @@ class SupportScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.apps,
+                    Icons.people,
                     color: AppConstants.primaryPurple,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Helpful Apps',
+                SafeText(
+                  'Community Support',
                   style: TextStyle(
                     fontSize: AppConstants.fontSizeXLarge,
                     fontWeight: FontWeight.bold,
                     color: AppConstants.textDark,
                   ),
+                  maxLines: 1,
                 ),
               ],
             ),
-            
             const SizedBox(height: AppConstants.paddingLarge),
-            
-            ...apps.map((app) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
-                child: _buildAppItem(
-                  app['name']!,
-                  app['description']!,
-                  app['category']!,
-                ),
-              );
-            }),
+            _buildSupportItem(
+              'Reddit Recovery Communities',
+              'r/stopdrinking, r/leaves, r/addiction',
+              'Connect with others in recovery',
+              () => _launchUrl('https://www.reddit.com/r/stopdrinking'),
+              Icons.forum,
+              AppConstants.warningYellow,
+            ),
+            _buildSupportItem(
+              'In The Rooms',
+              'Online Recovery Meetings',
+              'Virtual support group meetings',
+              () => _launchUrl('https://www.intherooms.com'),
+              Icons.video_call,
+              AppConstants.blueAccent,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAppItem(String name, String description, String category) {
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingMedium),
-      decoration: BoxDecoration(
-        color: AppConstants.backgroundGray,
+  Widget _buildSupportItem(
+    String title,
+    String subtitle,
+    String description,
+    VoidCallback onTap,
+    IconData icon,
+    Color color,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppConstants.primaryPurple,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.phone_android,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: AppConstants.paddingMedium),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+        child: Padding(
+          padding: const EdgeInsets.all(AppConstants.paddingMedium),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: color,
+                size: 24,
+              ),
+              const SizedBox(width: AppConstants.paddingMedium),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
+                    SafeText(
+                      title,
+                      style: TextStyle(
                         fontSize: AppConstants.fontSizeLarge,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: AppConstants.textDark,
                       ),
+                      maxLines: 2,
                     ),
-                    const SizedBox(width: AppConstants.paddingSmall),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.paddingSmall,
-                        vertical: 2,
+                    SafeText(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeMedium,
+                        fontWeight: FontWeight.w500,
+                        color: color,
                       ),
-                      decoration: BoxDecoration(
-                        color: AppConstants.primaryPurple,
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                      maxLines: 2,
+                    ),
+                    SafeText(
+                      description,
+                      style: TextStyle(
+                        fontSize: AppConstants.fontSizeSmall,
+                        color: AppConstants.textGray,
                       ),
-                      child: Text(
-                        category,
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      maxLines: 3,
                     ),
                   ],
                 ),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: AppConstants.fontSizeMedium,
-                    color: AppConstants.textGray,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              Icon(
+                Icons.open_in_new,
+                color: AppConstants.textGray,
+                size: 16,
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInspirationalContentCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppConstants.lightYellow,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    color: AppConstants.warningYellow,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
-                  'Stay Inspired',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: AppConstants.paddingLarge),
-            
-            Container(
-              padding: const EdgeInsets.all(AppConstants.paddingLarge),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppConstants.primaryPurple.withOpacity(0.1),
-                    AppConstants.primaryPurple.withOpacity(0.05),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    '"The strongest people are not those who show strength in front of us, but those who win battles we know nothing about."',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
-                      fontStyle: FontStyle.italic,
-                      color: AppConstants.primaryPurple,
-                      height: 1.4,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  
-                  const SizedBox(height: AppConstants.paddingLarge),
-                  
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Could navigate to a quotes/inspiration section
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Get New Quote'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppConstants.primaryPurple,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 
-  void _handleContactTap(String contact) {
-    if (contact.contains('988')) {
-      _makePhoneCall('tel:988');
-    } else if (contact.contains('741741')) {
-      _sendSMS('741741', 'HOME');
-    } else if (contact.contains('1-800-662-4357')) {
-      _makePhoneCall('tel:18006624357');
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      await launchUrl(phoneUri);
     }
   }
 
-  Future<void> _makePhoneCall(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+  Future<void> _sendText(String phoneNumber, String message) async {
+    final Uri smsUri = Uri(scheme: 'sms', path: phoneNumber, queryParameters: {'body': message});
+    if (await canLaunchUrl(smsUri)) {
+      await launchUrl(smsUri);
     }
   }
 
-  Future<void> _sendSMS(String phoneNumber, String message) async {
-    final uri = Uri.parse('sms:$phoneNumber?body=$message');
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.inAppWebView);
     }
   }
 }
