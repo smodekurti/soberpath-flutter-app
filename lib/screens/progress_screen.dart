@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 import '../models/sobriety_models.dart';
-import '../utils/responsive_helpers.dart';
+
+import '../widgets/safe_text.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -27,44 +28,36 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.surface,
       body: Consumer<AppStateProvider>(
         builder: (context, provider, child) {
           return CustomScrollView(
             slivers: [
-              // Header
+              // Collapsible header
               SliverAppBar(
-                expandedHeight: 200,
-                floating: false,
+                expandedHeight: 150,
+                floating: true,
                 pinned: true,
-                backgroundColor: Colors.transparent,
+                backgroundColor: context.colors.primary,
+                title: const Text('Progress'),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    decoration: const BoxDecoration(
-                      gradient: AppConstants.purpleGradient,
+                    decoration: BoxDecoration(
+                      gradient: context.colors.primaryGradient,
                     ),
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                        padding: EdgeInsets.all(context.spacing.large),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            SafeText(
-                              'Progress',
-                              style: TextStyle(
-                                fontSize: AppConstants.fontSizeTitle,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              maxLines: 1,
-                            ),
-                            const SizedBox(height: AppConstants.paddingSmall),
+                            // Show only the subtitle - main title now comes from SliverAppBar.title
                             SafeText(
                               'Track your milestones',
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeLarge,
-                                color: Colors.white.withValues(alpha: .9),
+                                fontSize: context.typography.titleLarge,
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                               maxLines: 2,
                             ),
@@ -78,13 +71,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
               // Content
               SliverPadding(
-                padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                padding: EdgeInsets.all(context.spacing.large),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     // Milestones Section
                     _buildMilestonesSection(provider),
                     
-                    const SizedBox(height: AppConstants.paddingLarge),
+                    SizedBox(height: context.spacing.large),
                     
                     // Statistics Card
                     _buildStatisticsCard(provider),
@@ -101,7 +94,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget _buildMilestonesSection(AppStateProvider provider) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -110,38 +103,39 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightYellow,
-                    borderRadius: BorderRadius.circular(8),
+                    color: context.colors.secondary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(context.borders.small),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.emoji_events,
-                    color: AppConstants.warningYellow,
+                    color: context.colors.secondary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 Expanded(
-                  child: SafeText(
+                  child: Text(
                     'Milestones & Achievements',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeXLarge,
+                      fontSize: context.typography.headlineSmall,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             // Display milestones if available, otherwise show placeholder
             if (provider.milestones.isNotEmpty)
               ...provider.milestones.map((milestone) => Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+                padding: EdgeInsets.only(bottom: context.spacing.medium),
                 child: _buildMilestoneItem(milestone, provider),
-              )).toList()
+              ))
             else
               _buildMilestonePlaceholder(),
           ],
@@ -156,16 +150,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final daysUntil = stats != null ? provider.getDaysUntilMilestone(milestone.days) : milestone.days;
 
     return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingLarge),
+      padding: EdgeInsets.all(context.spacing.large),
       decoration: BoxDecoration(
         color: milestone.achieved 
-            ? AppConstants.lightGreen 
-            : AppConstants.backgroundGray,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+            ? context.colors.successLight 
+            : context.colors.surfaceVariant,
+        borderRadius: BorderRadius.circular(context.borders.medium),
         border: Border.all(
           color: milestone.achieved 
-              ? AppConstants.successGreen 
-              : AppConstants.borderGray,
+              ? context.colors.success 
+              : context.colors.outline,
         ),
       ),
       child: Column(
@@ -178,8 +172,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 height: 40,
                 decoration: BoxDecoration(
                   color: milestone.achieved 
-                      ? AppConstants.successGreen 
-                      : AppConstants.borderGray,
+                      ? context.colors.success 
+                      : context.colors.outline,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -188,7 +182,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: AppConstants.paddingMedium),
+              SizedBox(width: context.spacing.medium),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,11 +190,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     SafeText(
                       '${milestone.days} Day${milestone.days != 1 ? 's' : ''}',
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeXLarge,
+                        fontSize: context.typography.titleLarge,
                         fontWeight: FontWeight.bold,
                         color: milestone.achieved 
-                            ? AppConstants.successGreen 
-                            : AppConstants.textDark,
+                            ? context.colors.success 
+                            : context.colors.onSurface,
                       ),
                       maxLines: 1,
                     ),
@@ -208,8 +202,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       SafeText(
                         'Achieved on ${milestone.achievedDate!.day}/${milestone.achievedDate!.month}/${milestone.achievedDate!.year}',
                         style: TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
-                          color: AppConstants.successGreen,
+                          fontSize: context.typography.bodySmall,
+                          color: context.colors.success,
                         ),
                         maxLines: 1,
                       ),
@@ -218,18 +212,18 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ),
               if (milestone.achieved)
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppConstants.paddingMedium,
-                    vertical: AppConstants.paddingSmall,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.spacing.medium,
+                    vertical: context.spacing.small,
                   ),
                   decoration: BoxDecoration(
-                    color: AppConstants.successGreen,
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                    color: context.colors.success,
+                    borderRadius: BorderRadius.circular(context.borders.medium),
                   ),
-                  child: const SafeText(
+                  child: SafeText(
                     'Achieved!',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeSmall,
+                      fontSize: context.typography.bodySmall,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -239,22 +233,22 @@ class _ProgressScreenState extends State<ProgressScreen> {
             ],
           ),
           
-          const SizedBox(height: AppConstants.paddingMedium),
+          SizedBox(height: context.spacing.medium),
           
           SafeText(
             milestone.benefit,
             style: TextStyle(
-              fontSize: AppConstants.fontSizeMedium,
+              fontSize: context.typography.bodyMedium,
               color: milestone.achieved 
-                  ? AppConstants.successGreen 
-                  : AppConstants.textGray,
+                  ? context.colors.success 
+                  : context.colors.onSurfaceVariant,
               height: 1.4,
             ),
             maxLines: 3,
           ),
           
           if (!milestone.achieved && stats != null) ...[
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -262,39 +256,39 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 SafeText(
                   'Progress',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeMedium,
+                    fontSize: context.typography.bodyMedium,
                     fontWeight: FontWeight.w600,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                   maxLines: 1,
                 ),
                 SafeText(
                   '${stats.days} / ${milestone.days} days',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeMedium,
-                    color: AppConstants.textGray,
+                    fontSize: context.typography.bodyMedium,
+                    color: context.colors.onSurfaceVariant,
                   ),
                   maxLines: 1,
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingSmall),
+            SizedBox(height: context.spacing.small),
             
             LinearProgressIndicator(
               value: progress,
-              backgroundColor: AppConstants.borderGray,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppConstants.primaryPurple),
+              backgroundColor: context.colors.outline,
+              valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
               minHeight: 6,
             ),
             
-            const SizedBox(height: AppConstants.paddingSmall),
+            SizedBox(height: context.spacing.small),
             
             SafeText(
               '$daysUntil days to go',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeSmall,
-                color: AppConstants.primaryPurple,
+                fontSize: context.typography.bodySmall,
+                color: context.colors.primary,
                 fontWeight: FontWeight.w600,
               ),
               maxLines: 1,
@@ -307,35 +301,35 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   Widget _buildMilestonePlaceholder() {
     return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingLarge),
+      padding: EdgeInsets.all(context.spacing.large),
       decoration: BoxDecoration(
-        color: AppConstants.backgroundGray,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
-        border: Border.all(color: AppConstants.borderGray),
+        color: context.colors.surfaceVariant,
+        borderRadius: BorderRadius.circular(context.borders.medium),
+        border: Border.all(color: context.colors.outline),
       ),
       child: Column(
         children: [
           Icon(
             Icons.emoji_events_outlined,
             size: 48,
-            color: AppConstants.textGray,
+            color: context.colors.onSurfaceVariant,
           ),
-          const SizedBox(height: AppConstants.paddingMedium),
+          SizedBox(height: context.spacing.medium),
           SafeText(
             'No milestones available',
             style: TextStyle(
-              fontSize: AppConstants.fontSizeLarge,
+              fontSize: context.typography.titleMedium,
               fontWeight: FontWeight.w600,
-              color: AppConstants.textGray,
+              color: context.colors.onSurfaceVariant,
             ),
             maxLines: 1,
           ),
-          const SizedBox(height: AppConstants.paddingSmall),
+          SizedBox(height: context.spacing.small),
           SafeText(
             'Set your sobriety date to track milestones',
             style: TextStyle(
-              fontSize: AppConstants.fontSizeMedium,
-              color: AppConstants.textGray,
+              fontSize: context.typography.bodyMedium,
+              color: context.colors.onSurfaceVariant,
             ),
             maxLines: 2,
             textAlign: TextAlign.center,
@@ -348,7 +342,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
   Widget _buildStatisticsCard(AppStateProvider provider) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -357,23 +351,23 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
-                    borderRadius: BorderRadius.circular(8),
+                    color: context.colors.primaryLight,
+                    borderRadius: BorderRadius.circular(context.borders.small),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.analytics,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 Expanded(
                   child: SafeText(
                     'Progress Analytics',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeXLarge,
+                      fontSize: context.typography.titleLarge,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 1,
                   ),
@@ -381,7 +375,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             FutureBuilder<Map<String, dynamic>>(
               future: provider.getStatistics(),
@@ -393,13 +387,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       _buildStatRow('Check-in Streak', '${stats['checkInStreak'] ?? 0} days'),
                       _buildStatRow('Best Mood Week', '${(stats['bestMoodWeek'] ?? 0.0).toStringAsFixed(1)}/10'),
                       _buildStatRow('Lowest Craving Day', '${(stats['lowestCravingDay'] ?? 0.0).toStringAsFixed(1)}/10'),
-                      _buildStatRow('Progress Score', '${((stats['milestonesAchieved'] ?? 0) * 10 + (stats['totalCheckIns'] ?? 0)).toString()}'),
+                      _buildStatRow('Progress Score', ((stats['milestonesAchieved'] ?? 0) * 10 + (stats['totalCheckIns'] ?? 0)).toString()),
                     ],
                   );
                 } else {
-                  return const Center(
+                  return Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(AppConstants.primaryPurple),
+                      valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
                     ),
                   );
                 }
@@ -413,7 +407,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   Widget _buildStatRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      padding: EdgeInsets.only(bottom: context.spacing.medium),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -422,21 +416,21 @@ class _ProgressScreenState extends State<ProgressScreen> {
             child: SafeText(
               label,
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
-                color: AppConstants.textGray,
+                fontSize: context.typography.titleMedium,
+                color: context.colors.onSurfaceVariant,
               ),
               maxLines: 2,
             ),
           ),
-          const SizedBox(width: AppConstants.paddingSmall),
+          SizedBox(width: context.spacing.small),
           Expanded(
             flex: 1,
             child: SafeText(
               value,
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
+                fontSize: context.typography.titleMedium,
                 fontWeight: FontWeight.bold,
-                color: AppConstants.primaryPurple,
+                color: context.colors.primary,
               ),
               maxLines: 1,
               textAlign: TextAlign.end,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../config/theme_extensions.dart';
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
+import '../widgets/app_header.dart';
+import '../config/app_config.dart';
+
 import '../widgets/sobriety_counter_card.dart';
 import '../widgets/daily_quote_card.dart';
 import '../widgets/daily_checkin_card.dart';
-import '../widgets/app_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,51 +31,69 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.surface,
       body: Consumer<AppStateProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading && !provider.hasUserProfile) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppConstants.primaryPurple),
+                valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
               ),
             );
           }
 
           return RefreshIndicator(
             onRefresh: _refreshData,
-            color: AppConstants.primaryPurple,
+            color: context.colors.primary,
             child: CustomScrollView(
               slivers: [
-                // App Header with gradient background
-                const SliverToBoxAdapter(
-                  child: AppHeader(),
+                // Collapsible App Header
+                SliverAppBar(
+                  expandedHeight: 150,
+                  floating: true,
+                  pinned: true,
+                  backgroundColor: context.colors.primary,
+                  // Title will only show when collapsed
+                  title: Text(AppConfig.info.name),
+                  // Don't show title text in FlexibleSpaceBar to avoid duplication
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(
+                      decoration: BoxDecoration(
+                        gradient: context.colors.primaryGradient,
+                      ),
+                      // Use AppHeader without modification to preserve its functionality
+                      child: const SafeArea(
+                        bottom: false,
+                        child: AppHeader(),
+                      ),
+                    ),
+                  ),
                 ),
 
                 // Main Content
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppConstants.paddingLarge,
+                  padding: EdgeInsets.fromLTRB(
+                    context.spacing.large,
                     0,
-                    AppConstants.paddingLarge,
-                    AppConstants.paddingLarge,
+                    context.spacing.large,
+                    context.spacing.large,
                   ),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       // Sobriety Counter Card
                       const SobrietyCounterCard(),
                       
-                      const SizedBox(height: AppConstants.paddingLarge),
+                      SizedBox(height: context.spacing.large),
                       
                       // Daily Quote Card
                       const DailyQuoteCard(),
                       
-                      const SizedBox(height: AppConstants.paddingLarge),
+                      SizedBox(height: context.spacing.large),
                       
                       // Enhanced Milestones Card
                       Card(
                         child: Padding(
-                          padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                          padding: EdgeInsets.all(context.spacing.large),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -86,41 +106,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: AppConstants.lightBlue,
-                                          borderRadius: BorderRadius.circular(
-                                              AppConstants.borderRadiusSmall),
+                                          color: context.colors.secondary.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(context.borders.small),
                                         ),
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.emoji_events_outlined,
-                                          color: AppConstants.blueAccent,
+                                          color: context.colors.secondary,
                                           size: 20,
                                         ),
                                       ),
-                                      const SizedBox(width: AppConstants.paddingMedium),
-                                      const Text(
+                                      SizedBox(width: context.spacing.medium),
+                                      Text(
                                         'Milestones',
                                         style: TextStyle(
-                                          fontSize: AppConstants.fontSizeMedium,
-                                          color: AppConstants.textGray,
+                                          fontSize: context.typography.bodyMedium,
+                                          color: context.colors.onSurfaceVariant,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: AppConstants.paddingSmall,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: context.spacing.small,
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppConstants.blueAccent.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                                      color: context.colors.secondary.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(context.borders.small),
                                     ),
                                     child: Text(
                                       '${provider.achievedMilestonesCount} unlocked',
-                                      style: const TextStyle(
-                                        fontSize: AppConstants.fontSizeSmall,
-                                        color: AppConstants.blueAccent,
+                                      style: TextStyle(
+                                        fontSize: context.typography.bodySmall,
+                                        color: context.colors.secondary,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -128,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                               
-                              const SizedBox(height: AppConstants.paddingLarge),
+                              SizedBox(height: context.spacing.large),
                               
                               // Next milestone section
                               if (provider.nextMilestone != null) ...[
@@ -138,16 +157,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: 3,
                                       height: 20,
                                       decoration: BoxDecoration(
-                                        color: AppConstants.blueAccent,
+                                        color: context.colors.secondary,
                                         borderRadius: BorderRadius.circular(2),
                                       ),
                                     ),
-                                    const SizedBox(width: AppConstants.paddingSmall),
-                                    const Text(
+                                    SizedBox(width: context.spacing.small),
+                                    Text(
                                       'Next Goal',
                                       style: TextStyle(
-                                        fontSize: AppConstants.fontSizeSmall,
-                                        color: AppConstants.textGray,
+                                        fontSize: context.typography.bodySmall,
+                                        color: context.colors.onSurfaceVariant,
                                         fontWeight: FontWeight.w600,
                                         letterSpacing: 0.5,
                                       ),
@@ -155,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 
-                                const SizedBox(height: AppConstants.paddingSmall),
+                                SizedBox(height: context.spacing.small),
                                 
                                 // Next milestone info
                                 Row(
@@ -166,18 +185,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           Text(
                                             '${provider.nextMilestone!.days} Days',
-                                            style: const TextStyle(
-                                              fontSize: AppConstants.fontSizeXLarge,
+                                            style: TextStyle(
+                                              fontSize: context.typography.titleLarge,
                                               fontWeight: FontWeight.bold,
-                                              color: AppConstants.blueAccent,
+                                              color: context.colors.secondary,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
                                             provider.nextMilestone!.benefit,
-                                            style: const TextStyle(
-                                              fontSize: AppConstants.fontSizeSmall,
-                                              color: AppConstants.textGray,
+                                            style: TextStyle(
+                                              fontSize: context.typography.bodySmall,
+                                              color: context.colors.onSurfaceVariant,
                                               height: 1.3,
                                             ),
                                             maxLines: 3,
@@ -187,31 +206,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     
-                                    const SizedBox(width: AppConstants.paddingMedium),
+                                    SizedBox(width: context.spacing.medium),
                                     
                                     // Days remaining
                                     Container(
-                                      padding: const EdgeInsets.all(AppConstants.paddingMedium),
+                                      padding: EdgeInsets.all(context.spacing.medium),
                                       decoration: BoxDecoration(
-                                        color: AppConstants.primaryPurple.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                                        color: context.colors.primary.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(context.borders.medium),
                                       ),
                                       child: Column(
                                         children: [
                                           Text(
                                             '${provider.getDaysUntilMilestone(provider.nextMilestone!.days)}',
-                                            style: const TextStyle(
-                                              fontSize: AppConstants.fontSizeXLarge,
+                                            style: TextStyle(
+                                              fontSize: context.typography.titleLarge,
                                               fontWeight: FontWeight.bold,
-                                              color: AppConstants.primaryPurple,
+                                              color: context.colors.primary,
                                             ),
                                             maxLines: 1,
                                           ),
                                           Text(
                                             'days to go',
                                             style: TextStyle(
-                                              fontSize: AppConstants.fontSizeSmall,
-                                              color: AppConstants.primaryPurple.withValues(alpha: 0.8),
+                                              fontSize: context.typography.bodySmall,
+                                              color: context.colors.primary.withValues(alpha: 0.8),
                                               fontWeight: FontWeight.w500,
                                             ),
                                             maxLines: 1,
@@ -222,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 
-                                const SizedBox(height: AppConstants.paddingMedium),
+                                SizedBox(height: context.spacing.medium),
                                 
                                 // Progress bar
                                 Column(
@@ -234,16 +253,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           'Progress',
                                           style: TextStyle(
-                                            fontSize: AppConstants.fontSizeSmall,
-                                            color: AppConstants.textGray.withValues(alpha: 0.8),
+                                            fontSize: context.typography.bodySmall,
+                                            color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         Text(
                                           '${(provider.getMilestoneProgress(provider.nextMilestone!.days) * 100).toInt()}%',
-                                          style: const TextStyle(
-                                            fontSize: AppConstants.fontSizeSmall,
-                                            color: AppConstants.blueAccent,
+                                          style: TextStyle(
+                                            fontSize: context.typography.bodySmall,
+                                            color: context.colors.secondary,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -254,8 +273,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       child: LinearProgressIndicator(
                                         value: provider.getMilestoneProgress(provider.nextMilestone!.days),
-                                        backgroundColor: AppConstants.borderGray,
-                                        valueColor: const AlwaysStoppedAnimation<Color>(AppConstants.blueAccent),
+                                        backgroundColor: context.colors.outline,
+                                        valueColor: AlwaysStoppedAnimation<Color>(context.colors.secondary),
                                         minHeight: 6,
                                       ),
                                     ),
@@ -264,33 +283,33 @@ class _HomeScreenState extends State<HomeScreen> {
                               ] else ...[
                                 // All milestones achieved
                                 Container(
-                                  padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                                  padding: EdgeInsets.all(context.spacing.large),
                                   decoration: BoxDecoration(
-                                    color: AppConstants.successGreen.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                                    color: context.colors.success.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(context.borders.medium),
                                   ),
                                   child: Column(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.celebration,
-                                        color: AppConstants.successGreen,
+                                        color: context.colors.success,
                                         size: 32,
                                       ),
-                                      const SizedBox(height: AppConstants.paddingSmall),
-                                      const Text(
+                                      SizedBox(height: context.spacing.small),
+                                      Text(
                                         'All Milestones Achieved!',
                                         style: TextStyle(
-                                          fontSize: AppConstants.fontSizeLarge,
+                                          fontSize: context.typography.titleMedium,
                                           fontWeight: FontWeight.bold,
-                                          color: AppConstants.successGreen,
+                                          color: context.colors.success,
                                         ),
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
                                         'Congratulations on your incredible journey!',
                                         style: TextStyle(
-                                          fontSize: AppConstants.fontSizeSmall,
-                                          color: AppConstants.successGreen.withValues(alpha: 0.8),
+                                          fontSize: context.typography.bodySmall,
+                                          color: context.colors.success.withValues(alpha: 0.8),
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -303,18 +322,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       
-                      const SizedBox(height: AppConstants.paddingLarge),
+                      SizedBox(height: context.spacing.large),
                       
                       // Daily Check-in Card (if user has sober date)
                       if (provider.hasSoberDate) ...[
                         const DailyCheckInCard(),
-                        const SizedBox(height: AppConstants.paddingLarge),
+                        SizedBox(height: context.spacing.large),
                       ],
                       
                       // Motivation Section
                       _buildMotivationSection(provider),
                       
-                      const SizedBox(height: AppConstants.paddingXLarge),
+                      SizedBox(height: context.spacing.large * 2),
                     ]),
                   ),
                 ),
@@ -334,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -343,102 +362,102 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
-                    borderRadius: BorderRadius.circular(8),
+                    color: context.colors.primaryLight,
+                    borderRadius: BorderRadius.circular(context.borders.small),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.auto_awesome,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                const SizedBox(width: 16),
+                Text(
                   'Keep Going!',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: context.typography.titleLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             
             if (nextMilestone != null) ...[
               Text(
                 'You\'re ${provider.getDaysUntilMilestone(nextMilestone.days)} days away from your ${nextMilestone.days}-day milestone!',
-                style: const TextStyle(
-                  fontSize: AppConstants.fontSizeLarge,
-                  color: AppConstants.textDark,
+                style: TextStyle(
+                  fontSize: context.typography.titleMedium,
+                  color: context.colors.onSurface,
                 ),
               ),
               
-              const SizedBox(height: AppConstants.paddingMedium),
+              SizedBox(height: context.spacing.medium),
               
               // Progress bar for next milestone
               LinearProgressIndicator(
                 value: provider.getMilestoneProgress(nextMilestone.days),
-                backgroundColor: AppConstants.borderGray,
-                valueColor: const AlwaysStoppedAnimation<Color>(AppConstants.primaryPurple),
+                backgroundColor: context.colors.outline,
+                valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
                 minHeight: 6,
               ),
               
-              const SizedBox(height: AppConstants.paddingSmall),
+              SizedBox(height: context.spacing.small),
               
               Text(
                 '${(provider.getMilestoneProgress(nextMilestone.days) * 100).toInt()}% complete',
-                style: const TextStyle(
-                  fontSize: AppConstants.fontSizeMedium,
-                  color: AppConstants.textGray,
+                style: TextStyle(
+                  fontSize: context.typography.bodyMedium,
+                  color: context.colors.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ] else ...[
-              const Text(
+              Text(
                 'Amazing! You\'ve achieved all major milestones. Keep up the incredible work!',
                 style: TextStyle(
-                  fontSize: AppConstants.fontSizeLarge,
-                  color: AppConstants.successGreen,
+                  fontSize: context.typography.titleMedium,
+                  color: context.colors.success,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ],
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             // Achievement summary
             Container(
-              padding: const EdgeInsets.all(AppConstants.paddingMedium),
+              padding: EdgeInsets.all(context.spacing.medium),
               decoration: BoxDecoration(
-                color: AppConstants.lightGreen,
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                color: context.colors.success.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(context.borders.medium),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.emoji_events,
-                    color: AppConstants.successGreen,
+                    color: context.colors.success,
                   ),
-                  const SizedBox(width: AppConstants.paddingMedium),
+                  SizedBox(width: context.spacing.medium),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           '${stats.days} days strong',
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
+                          style: TextStyle(
+                            fontSize: context.typography.titleMedium,
                             fontWeight: FontWeight.bold,
-                            color: AppConstants.successGreen,
+                            color: context.colors.success,
                           ),
                         ),
                         Text(
                           '${provider.achievedMilestonesCount} milestones achieved',
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeMedium,
-                            color: AppConstants.successGreen,
+                          style: TextStyle(
+                            fontSize: context.typography.bodyMedium,
+                            color: context.colors.success,
                           ),
                         ),
                       ],

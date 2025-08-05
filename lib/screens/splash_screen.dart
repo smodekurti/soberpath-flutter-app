@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
+import '../config/app_config.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -55,8 +56,8 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppConstants.purpleGradient,
+        decoration: BoxDecoration(
+          gradient: context.colors.primaryGradient,
         ),
         child: SafeArea(
           child: Center(
@@ -89,32 +90,32 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ),
                         
-                        const SizedBox(height: AppConstants.paddingXLarge),
+                        SizedBox(height: context.spacing.large),
                         
                         // App Name
-                        const Text(
-                          AppConstants.appName,
+                        Text(
+                          AppConfig.info.name,
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeTitle,
+                            fontSize: context.typography.headlineLarge,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             letterSpacing: 1.2,
                           ),
                         ),
                         
-                        const SizedBox(height: AppConstants.paddingSmall),
+                        SizedBox(height: context.spacing.small),
                         
                         // App Tagline
                         Text(
-                          AppConstants.appTagline,
+                          AppConfig.info.tagline,
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
+                            fontSize: context.typography.bodyLarge,
                             color: Colors.white.withValues(alpha: .9),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                         
-                        const SizedBox(height: AppConstants.paddingXLarge * 2),
+                        SizedBox(height: context.spacing.large * 2),
                         
                         // Loading Indicator
                         SizedBox(
@@ -128,13 +129,13 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ),
                         
-                        const SizedBox(height: AppConstants.paddingLarge),
+                        SizedBox(height: context.spacing.large),
                         
                         // Loading Text
                         Text(
                           'Preparing your journey...',
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeMedium,
+                            fontSize: context.typography.bodyMedium,
                             color: Colors.white.withValues(alpha: .8),
                             fontWeight: FontWeight.w500,
                           ),

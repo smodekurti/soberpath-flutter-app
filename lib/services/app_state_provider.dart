@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/sobriety_models.dart';
 import '../services/database_service.dart';
 import '../services/notification_manager.dart';
-import '../constants/app_constants.dart';
+import '../config/app_config.dart';
 
 class AppStateProvider with ChangeNotifier {
   final DatabaseService _databaseService = DatabaseService();
@@ -68,8 +68,8 @@ class AppStateProvider with ChangeNotifier {
 
   String get todaysQuote {
     final today = DateTime.now().day;
-    return AppConstants
-        .motivationalQuotes[today % AppConstants.motivationalQuotes.length];
+    final quotes = AppConfig.content.motivationalQuotes;
+    return quotes[today % quotes.length];
   }
 
   DailyCheckIn? get todaysCheckIn {

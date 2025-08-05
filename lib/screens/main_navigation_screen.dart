@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 import 'home_screen.dart';
 import 'journal_screen.dart';
 import 'progress_screen.dart';
@@ -82,7 +82,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
@@ -101,9 +101,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         child: SafeArea(
           child: Container(
             height: 80, // Fixed height to prevent overflow
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppConstants.paddingSmall,
-              vertical: AppConstants.paddingSmall,
+            padding: EdgeInsets.symmetric(
+              horizontal: context.spacing.small,
+              vertical: context.spacing.small,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -117,30 +117,30 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     onTap: () => _onTabTapped(index),
                     behavior: HitTestBehavior.opaque,
                     child: AnimatedContainer(
-                      duration: AppConstants.animationFast,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppConstants.paddingSmall,
-                        vertical: AppConstants.paddingSmall,
+                      duration: context.animations.fast,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.spacing.small,
+                        vertical: context.spacing.small,
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppConstants.primaryPurple.withValues(alpha: 0.5)
+                            ? context.colors.primary.withValues(alpha: 0.1)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(
-                            AppConstants.borderRadiusMedium),
+                            context.borders.medium),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           AnimatedSwitcher(
-                            duration: AppConstants.animationFast,
+                            duration: context.animations.fast,
                             child: Icon(
                               isSelected ? item.activeIcon : item.icon,
                               key: ValueKey(isSelected),
                               color: isSelected
-                                  ? AppConstants.primaryPurple
-                                  : AppConstants.textGray,
+                                  ? context.colors.primary
+                                  : context.colors.onSurfaceVariant,
                               size: 22, // Slightly smaller icon
                             ),
                           ),
@@ -149,14 +149,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                             child: Text(
                               item.label,
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeSmall -
-                                    1, // Smaller font
+                                fontSize: context.typography.labelSmall,
                                 fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
+                                    ? context.typography.semiBold
+                                    : context.typography.medium,
                                 color: isSelected
-                                    ? AppConstants.primaryPurple
-                                    : AppConstants.textGray,
+                                    ? context.colors.primary
+                                    : context.colors.onSurfaceVariant,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

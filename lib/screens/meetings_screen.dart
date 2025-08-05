@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
+import 'package:soberpath_app/constants/app_constants.dart';
+import 'package:soberpath_app/widgets/safe_text.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+import '../config/theme_extensions.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
 
 class MeetingsScreen extends StatefulWidget {
   const MeetingsScreen({super.key});
@@ -17,7 +20,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       body: CustomScrollView(
         slivers: [
           // Header
@@ -28,29 +31,29 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: const BoxDecoration(
-                  gradient: AppConstants.purpleGradient,
+                decoration: BoxDecoration(
+                  gradient: context.colors.primaryGradient,
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                    padding: EdgeInsets.all(context.spacing.large),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text(
+                        Text(
                           'Meetings',
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeTitle,
+                            fontSize: context.typography.headlineMedium,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: AppConstants.paddingSmall),
+                        SizedBox(height: context.spacing.small),
                         Text(
                           'Find support groups near you',
                           style: TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
+                            fontSize: context.typography.titleMedium,
                             color: Colors.white.withValues(alpha: .9),
                           ),
                         ),
@@ -64,33 +67,33 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
           // Content
           SliverPadding(
-            padding: const EdgeInsets.all(AppConstants.paddingLarge),
+            padding: EdgeInsets.all(context.spacing.large),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Meeting Type Filter
                 _buildMeetingTypeFilter(),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Find Meetings Card
                 _buildFindMeetingsCard(),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Online Meetings Section
                 _buildOnlineMeetingsCard(),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Meeting Resources
                 _buildMeetingResourcesCard(),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Virtual Meeting Tips
                 _buildVirtualMeetingTipsCard(),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Meeting Preparation
                 _buildMeetingPreparationCard(),
@@ -105,23 +108,23 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   Widget _buildMeetingTypeFilter() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Meeting Type',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeXLarge,
+                fontSize: context.typography.titleLarge,
                 fontWeight: FontWeight.bold,
-                color: AppConstants.textDark,
+                color: context.colors.onSurface,
               ),
             ),
             
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             
             Wrap(
-              spacing: AppConstants.paddingSmall,
+              spacing: context.spacing.small,
               children: _meetingTypes.map((type) {
                 final isSelected = _selectedMeetingType == type;
                 return FilterChip(
@@ -133,10 +136,10 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                     });
                   },
                   backgroundColor: Colors.white,
-                  selectedColor: AppConstants.primaryPurple.withValues(alpha: .2),
-                  checkmarkColor: AppConstants.primaryPurple,
+                  selectedColor: context.colors.primary.withValues(alpha: 0.2),
+                  checkmarkColor: context.colors.primary,
                   labelStyle: TextStyle(
-                    color: isSelected ? AppConstants.primaryPurple : AppConstants.textGray,
+                    color: isSelected ? context.colors.primary : context.colors.onSurfaceVariant,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   ),
                 );
@@ -151,47 +154,47 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   Widget _buildFindMeetingsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           children: [
             Container(
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppConstants.lightBlue,
+                color: context.colors.secondaryLight,
                 borderRadius: BorderRadius.circular(40),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.location_on,
                 size: 40,
-                color: AppConstants.blueAccent,
+                color: context.colors.secondary,
               ),
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
-            const Text(
+            Text(
               'Find Local Meetings',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeXXLarge,
+                fontSize: context.typography.headlineSmall,
                 fontWeight: FontWeight.bold,
-                color: AppConstants.textDark,
+                color: context.colors.onSurface,
               ),
             ),
             
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             
-            const Text(
+            Text(
               'Connect with your local recovery community. Find in-person meetings in your area.',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
-                color: AppConstants.textGray,
+                fontSize: context.typography.titleMedium,
+                color: context.colors.onSurfaceVariant,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             SizedBox(
               width: double.infinity,
@@ -202,7 +205,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               ),
             ),
             
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             
             OutlinedButton.icon(
               onPressed: _openMeetingGuide,
@@ -222,34 +225,34 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
         'description': '24/7 Alcoholics Anonymous meetings',
         'url': 'https://aa-intergroup.org/meetings',
         'icon': Icons.laptop,
-        'color': AppConstants.blueAccent,
+        'color': context.colors.secondary,
       },
       {
         'title': 'NA Online Meetings',
         'description': 'Narcotics Anonymous virtual meetings',
         'url': 'https://virtual-na.org/meetings/',
         'icon': Icons.video_call,
-        'color': AppConstants.successGreen,
+        'color': context.colors.success,
       },
       {
         'title': 'SMART Recovery Online',
         'description': 'Self-management recovery meetings',
         'url': 'https://www.smartrecovery.org/community/',
         'icon': Icons.psychology,
-        'color': AppConstants.primaryPurple,
+        'color': context.colors.primary,
       },
       {
         'title': 'In The Rooms',
         'description': 'Recovery social network and meetings',
         'url': 'https://www.intherooms.com/',
         'icon': Icons.group,
-        'color': AppConstants.warningYellow,
+        'color': context.colors.warning,
       },
     ];
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -258,32 +261,32 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightGreen,
+                    color: context.colors.success.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.computer,
-                    color: AppConstants.successGreen,
+                    color: context.colors.success,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SizedBox(width: context.spacing.medium),
+                Text(
                   'Online Meetings',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: context.typography.titleLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             ...onlineMeetings.map((meeting) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+                padding: EdgeInsets.only(bottom: context.spacing.small),
                 child: _buildOnlineMeetingItem(
                   meeting['title'] as String,
                   meeting['description'] as String,
@@ -303,10 +306,10 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
     return GestureDetector(
       onTap: () => _launchURL(url),
       child: Container(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
+        padding: EdgeInsets.all(context.spacing.medium),
         decoration: BoxDecoration(
           color: color.withValues(alpha: .1),
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+          borderRadius: BorderRadius.circular(context.borders.medium),
           border: Border.all(color: color.withValues(alpha: .3)),
         ),
         child: Row(
@@ -323,7 +326,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: AppConstants.paddingMedium),
+            SizedBox(width: context.spacing.medium),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,19 +335,19 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                     title,
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeLarge),
+                          context, context.typography.titleLarge),
                       fontWeight: FontWeight.bold,
                       color: color,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: context.spacing.small),
                   SafeText(
                     description,
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeMedium),
+                          context, context.typography.bodyLarge),
                       color: color,
                       height: 1.3,
                     ),
@@ -395,7 +398,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -404,32 +407,32 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
+                    color: context.colors.primaryLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.library_books,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SizedBox(width: context.spacing.medium),
+                Text(
                   'Meeting Resources',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: context.typography.titleLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             ...resources.map((resource) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+                padding: EdgeInsets.only(bottom: context.spacing.small),
                 child: _buildResourceItem(
                   resource['title']!,
                   resource['description']!,
@@ -448,10 +451,10 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
     return GestureDetector(
       onTap: () => _launchURL(url),
       child: Container(
-        padding: const EdgeInsets.all(AppConstants.paddingMedium),
+        padding: EdgeInsets.all(context.spacing.medium),
         decoration: BoxDecoration(
-          color: AppConstants.backgroundGray,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+          color: context.colors.background,
+          borderRadius: BorderRadius.circular(context.spacing.medium),
         ),
         child: Row(
           children: [
@@ -459,7 +462,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppConstants.primaryPurple,
+                color: context.colors.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -468,7 +471,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: AppConstants.paddingMedium),
+            SizedBox(width: context.spacing.medium),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,27 +481,27 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                       Expanded(
                         child: Text(
                           title,
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
+                          style: TextStyle(
+                            fontSize: context.typography.titleMedium,
                             fontWeight: FontWeight.bold,
-                            color: AppConstants.textDark,
+                            color: context.colors.onSurface,
                           ),
                         ),
                       ),
-                      const SizedBox(width: AppConstants.paddingSmall),
+                      SizedBox(width: context.spacing.small),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppConstants.paddingSmall,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.spacing.small,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppConstants.primaryPurple,
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                          color: context.colors.primary,
+                          borderRadius: BorderRadius.circular(context.spacing.small),
                         ),
                         child: Text(
                           type,
-                          style: const TextStyle(
-                            fontSize: AppConstants.fontSizeSmall,
+                          style: TextStyle(
+                            fontSize: context.typography.bodySmall,
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
                           ),
@@ -506,21 +509,21 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: context.spacing.small),
                   Text(
                     description,
-                    style: const TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
-                      color: AppConstants.textGray,
+                    style: TextStyle(
+                      fontSize: context.typography.bodyLarge,
+                      color: context.colors.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: AppConstants.paddingSmall),
-            const Icon(
+            SizedBox(width: context.spacing.small),
+            Icon(
               Icons.launch,
-              color: AppConstants.primaryPurple,
+              color: context.colors.primary,
               size: 16,
             ),
           ],
@@ -543,7 +546,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -552,32 +555,32 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightYellow,
+                    color: context.colors.warningLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.tips_and_updates,
-                    color: AppConstants.warningYellow,
+                    color: context.colors.warning,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SizedBox(width: context.spacing.medium),
+                Text(
                   'Virtual Meeting Tips',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: context.typography.titleLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             ...tips.map((tip) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.paddingSmall),
+                padding: EdgeInsets.only(bottom: context.spacing.small),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -585,18 +588,18 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                       width: 6,
                       height: 6,
                       margin: const EdgeInsets.only(top: 8),
-                      decoration: const BoxDecoration(
-                        color: AppConstants.warningYellow,
+                      decoration: BoxDecoration(
+                        color: context.colors.warning,
                         shape: BoxShape.circle,
                       ),
                     ),
-                    const SizedBox(width: AppConstants.paddingMedium),
+                    SizedBox(width: context.spacing.medium),
                     Expanded(
                       child: Text(
                         tip,
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeMedium,
-                          color: AppConstants.textDark,
+                        style: TextStyle(
+                          fontSize: context.typography.bodyMedium,
+                          color: context.colors.onSurface,
                           height: 1.4,
                         ),
                       ),
@@ -614,7 +617,7 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
   Widget _buildMeetingPreparationCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -623,50 +626,50 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightGreen,
+                    color: context.colors.success.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.checklist,
-                    color: AppConstants.successGreen,
+                    color: context.colors.success,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Text(
+                SizedBox(width: context.spacing.medium),
+                Text(
                   'First Meeting?',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                    fontSize: context.typography.titleLarge,
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             Container(
-              padding: const EdgeInsets.all(AppConstants.paddingLarge),
+              padding: EdgeInsets.all(context.spacing.large),
               decoration: BoxDecoration(
-                color: AppConstants.lightGreen,
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                color: context.colors.success.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(context.borders.medium),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'What to Expect',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.successGreen,
+                      color: context.colors.success,
                     ),
                   ),
                   
-                  const SizedBox(height: AppConstants.paddingMedium),
+                  SizedBox(height: context.spacing.medium),
                   
-                  const Text(
+                  Text(
                     '• Meetings typically last 60-90 minutes\n'
                     '• You can just listen - sharing is optional\n'
                     '• Everyone is welcome, regardless of where you are in recovery\n'
@@ -674,13 +677,13 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                     '• No fees or dues required\n'
                     '• Arrive a few minutes early to introduce yourself',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
-                      color: AppConstants.successGreen,
+                      fontSize: context.typography.bodyLarge,
+                      color: context.colors.success,
                       height: 1.5,
                     ),
                   ),
                   
-                  const SizedBox(height: AppConstants.paddingLarge),
+                  SizedBox(height: context.spacing.large),
                   
                   Row(
                     children: [
@@ -690,20 +693,20 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
                             _showFirstMeetingDialog();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppConstants.successGreen,
+                            backgroundColor: context.colors.success,
                           ),
                           child: const Text('Learn More'),
                         ),
                       ),
-                      const SizedBox(width: AppConstants.paddingMedium),
+                      SizedBox(width: context.spacing.medium),
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
                             _showMeetingEtiquetteDialog();
                           },
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: AppConstants.successGreen,
-                            side: const BorderSide(color: AppConstants.successGreen),
+                            foregroundColor: context.colors.success,
+                            side: BorderSide(color: context.colors.success),
                           ),
                           child: const Text('Meeting Etiquette'),
                         ),
@@ -714,29 +717,29 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
               ),
             ),
             
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             
             // Emergency Support Info
             Container(
-              padding: const EdgeInsets.all(AppConstants.paddingMedium),
+              padding: EdgeInsets.all(context.spacing.medium),
               decoration: BoxDecoration(
-                color: AppConstants.lightBlue,
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                color: context.colors.secondaryLight,
+                borderRadius: BorderRadius.circular(context.borders.medium),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: AppConstants.blueAccent,
+                    color: context.colors.secondary,
                     size: 20,
                   ),
-                  SizedBox(width: AppConstants.paddingMedium),
+                  SizedBox(width: context.spacing.medium),
                   Expanded(
                     child: Text(
                       'Remember: If you\'re in crisis, seek immediate help. Visit the Support tab for emergency resources.',
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
-                        color: AppConstants.blueAccent,
+                        fontSize: context.typography.bodyMedium,
+                        color: context.colors.secondary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -905,9 +908,9 @@ class _MeetingsScreenState extends State<MeetingsScreen> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Could not open the link'),
-            backgroundColor: AppConstants.dangerRed,
+          SnackBar(
+            content: const Text('Could not open the link'),
+            backgroundColor: context.colors.error,
           ),
         );
       }

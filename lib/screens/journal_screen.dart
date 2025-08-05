@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 import '../models/sobriety_models.dart';
 import '../utils/responsive_helpers.dart'; // Import responsive helpers
 
@@ -28,43 +29,35 @@ class _JournalScreenState extends State<JournalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       body: Consumer<AppStateProvider>(
         builder: (context, provider, child) {
           return CustomScrollView(
             slivers: [
-              // Header
+              // Collapsible header
               SliverAppBar(
-                expandedHeight: 200,
-                floating: false,
+                expandedHeight: 150,
+                floating: true,
                 pinned: true,
-                backgroundColor: Colors.transparent,
+                backgroundColor: context.colors.primary,
+                title: const Text('Journal'),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    decoration: const BoxDecoration(
-                      gradient: AppConstants.purpleGradient,
+                    decoration: BoxDecoration(
+                      gradient: context.colors.primaryGradient,
                     ),
                     child: SafeArea(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.all(AppConstants.paddingLarge),
+                        padding: EdgeInsets.all(context.spacing.large),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text(
-                              'Journal',
-                              style: TextStyle(
-                                fontSize: AppConstants.fontSizeTitle,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: AppConstants.paddingSmall),
+                            // Show only the subtitle - main title now comes from SliverAppBar.title
                             Text(
                               'Your daily reflections',
                               style: TextStyle(
-                                fontSize: AppConstants.fontSizeLarge,
+                                fontSize: context.typography.titleLarge,
                                 color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
@@ -78,7 +71,7 @@ class _JournalScreenState extends State<JournalScreen> {
 
               // Content
               SliverPadding(
-                padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                padding: EdgeInsets.all(context.spacing.large),
                 sliver: provider.dailyCheckIns.isEmpty
                     ? SliverToBoxAdapter(child: _buildEmptyState(provider))
                     : SliverList(
@@ -86,8 +79,8 @@ class _JournalScreenState extends State<JournalScreen> {
                           (context, index) {
                             final checkIn = provider.dailyCheckIns[index];
                             return Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: AppConstants.paddingMedium,
+                              padding: EdgeInsets.only(
+                                bottom: context.spacing.medium,
                               ),
                               child: _buildJournalEntry(checkIn),
                             );
@@ -106,42 +99,42 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget _buildEmptyState(AppStateProvider provider) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingXLarge),
+        padding: EdgeInsets.all(context.spacing.extraLarge),
         child: Column(
           children: [
             Container(
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: AppConstants.lightPurple,
+                color: context.colors.primaryLight,
                 borderRadius: BorderRadius.circular(40),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.book_outlined,
                 size: 40,
-                color: AppConstants.primaryPurple,
+                color: context.colors.primary,
               ),
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
-            const Text(
+            SizedBox(height: context.spacing.large),
+            Text(
               'No journal entries yet',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeXLarge,
+                fontSize: context.typography.headlineSmall,
                 fontWeight: FontWeight.bold,
-                color: AppConstants.textDark,
+                color: context.colors.onSurface,
               ),
             ),
-            const SizedBox(height: AppConstants.paddingMedium),
-            const Text(
+            SizedBox(height: context.spacing.medium),
+            Text(
               'Start your daily check-ins to build your journal history. Your reflections will appear here.',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeLarge,
-                color: AppConstants.textGray,
+                fontSize: context.typography.titleLarge,
+                color: context.colors.onSurfaceVariant,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             ElevatedButton.icon(
               onPressed: () {
                 // Check if a check-in already exists for today
@@ -154,10 +147,10 @@ class _JournalScreenState extends State<JournalScreen> {
                 if (todayCheckIn) {
                   // Show a message if a check-in already exists
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
+                    SnackBar(
+                      content: const Text(
                           'You have already completed your check-in for today.'),
-                      backgroundColor: AppConstants.warningYellow,
+                      backgroundColor: context.colors.warning,
                     ),
                   );
                   return; // Don't navigate
@@ -179,7 +172,7 @@ class _JournalScreenState extends State<JournalScreen> {
       child: Padding(
         padding: EdgeInsets.all(
           ResponsiveHelpers.getResponsivePadding(
-              context, AppConstants.paddingLarge),
+              context, context.spacing.large),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,35 +186,35 @@ class _JournalScreenState extends State<JournalScreen> {
                     DateFormat('EEEE, MMMM d, y').format(checkIn.date),
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeXLarge),
+                          context, context.typography.headlineSmall),
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     overflow: TextOverflow.ellipsis, // Prevent overflow
                   ),
                 ),
                 SizedBox(
                     width: ResponsiveHelpers.getResponsivePadding(
-                        context, AppConstants.paddingSmall)),
+                        context, context.spacing.small)),
                 Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: ResponsiveHelpers.getResponsivePadding(
-                        context, AppConstants.paddingMedium),
+                        context, context.spacing.medium),
                     vertical: ResponsiveHelpers.getResponsivePadding(
-                        context, AppConstants.paddingSmall),
+                        context, context.spacing.small),
                   ),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
+                    color: context.colors.primaryLight,
                     borderRadius:
-                        BorderRadius.circular(AppConstants.borderRadiusMedium),
+                        BorderRadius.circular(context.borders.medium),
                   ),
                   child: Text(
                     DateFormat('MMM d').format(checkIn.date),
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeSmall),
+                          context, context.typography.bodySmall),
                       fontWeight: FontWeight.w600,
-                      color: AppConstants.primaryPurple,
+                      color: context.colors.primary,
                     ),
                   ),
                 ),
@@ -230,7 +223,7 @@ class _JournalScreenState extends State<JournalScreen> {
 
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Mood and Craving Indicators
             Row(
@@ -245,7 +238,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 ),
                 SizedBox(
                     width: ResponsiveHelpers.getResponsivePadding(
-                        context, AppConstants.paddingLarge)),
+                        context, context.spacing.large)),
                 Expanded(
                   child: _buildMoodIndicator(
                     'Cravings',
@@ -260,7 +253,7 @@ class _JournalScreenState extends State<JournalScreen> {
             if (checkIn.reflection.isNotEmpty) ...[
               SizedBox(
                   height: ResponsiveHelpers.getResponsivePadding(
-                      context, AppConstants.paddingLarge)),
+                      context, context.spacing.large)),
 
               // Reflection Content
               ConstrainedBox(
@@ -273,47 +266,47 @@ class _JournalScreenState extends State<JournalScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.all(
                       ResponsiveHelpers.getResponsivePadding(
-                          context, AppConstants.paddingLarge),
+                          context, context.spacing.large),
                     ),
                     decoration: BoxDecoration(
-                      color: AppConstants.backgroundGray,
+                      color: context.colors.background,
                       borderRadius: BorderRadius.circular(
-                          AppConstants.borderRadiusMedium),
+                          context.borders.medium),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.format_quote,
-                              color: AppConstants.primaryPurple,
+                              color: context.colors.primary,
                               size: 20,
                             ),
                             SizedBox(
                                 width: ResponsiveHelpers.getResponsivePadding(
-                                    context, AppConstants.paddingSmall)),
+                                    context, context.spacing.small)),
                             Text(
                               'Daily Reflection',
                               style: TextStyle(
                                 fontSize:
                                     ResponsiveHelpers.getResponsiveFontSize(
-                                        context, AppConstants.fontSizeMedium),
+                                        context, context.typography.bodyLarge),
                                 fontWeight: FontWeight.w600,
-                                color: AppConstants.primaryPurple,
+                                color: context.colors.primary,
                               ),
                             ),
                           ],
                         ),
                         SizedBox(
                             height: ResponsiveHelpers.getResponsivePadding(
-                                context, AppConstants.paddingMedium)),
+                                context, context.spacing.medium)),
                         Text(
                           checkIn.reflection,
                           style: TextStyle(
                             fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                context, AppConstants.fontSizeLarge),
-                            color: AppConstants.textDark,
+                                context, context.typography.titleMedium),
+                            color: context.colors.onSurface,
                             height: 1.5,
                           ),
                         ),
@@ -325,24 +318,24 @@ class _JournalScreenState extends State<JournalScreen> {
             ] else ...[
               SizedBox(
                   height: ResponsiveHelpers.getResponsivePadding(
-                      context, AppConstants.paddingLarge)),
+                      context, context.spacing.large)),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(
                   ResponsiveHelpers.getResponsivePadding(
-                      context, AppConstants.paddingLarge),
+                      context, context.spacing.large),
                 ),
                 decoration: BoxDecoration(
-                  color: AppConstants.backgroundGray,
+                  color: context.colors.surfaceVariant,
                   borderRadius:
-                      BorderRadius.circular(AppConstants.borderRadiusMedium),
+                      BorderRadius.circular(context.borders.medium),
                 ),
                 child: Text(
                   'No reflection recorded for this day.',
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                        context, AppConstants.fontSizeMedium),
-                    color: AppConstants.textGray,
+                        context, context.typography.bodyMedium),
+                    color: context.colors.onSurfaceVariant,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -352,14 +345,14 @@ class _JournalScreenState extends State<JournalScreen> {
             // Entry timestamp
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
 
             Text(
               'Recorded at ${DateFormat('h:mm a').format(checkIn.createdAt)}',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeSmall),
-                color: AppConstants.textGray,
+                    context, context.typography.bodySmall),
+                color: context.colors.onSurfaceVariant,
               ),
             ),
           ],
@@ -371,10 +364,10 @@ class _JournalScreenState extends State<JournalScreen> {
   Widget _buildMoodIndicator(
       String label, int value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(AppConstants.paddingMedium),
+      padding: EdgeInsets.all(context.spacing.medium),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+        borderRadius: BorderRadius.circular(context.borders.medium),
       ),
       child: Column(
         children: [
@@ -383,11 +376,11 @@ class _JournalScreenState extends State<JournalScreen> {
             color: color,
             size: 24,
           ),
-          const SizedBox(height: AppConstants.paddingSmall),
+          SizedBox(height: context.spacing.small),
           Text(
             label,
             style: TextStyle(
-              fontSize: AppConstants.fontSizeMedium,
+              fontSize: context.typography.bodyMedium,
               fontWeight: FontWeight.w600,
               color: color,
             ),
@@ -395,7 +388,7 @@ class _JournalScreenState extends State<JournalScreen> {
           Text(
             '$value/10',
             style: TextStyle(
-              fontSize: AppConstants.fontSizeLarge,
+              fontSize: context.typography.titleMedium,
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -412,9 +405,9 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Color _getMoodColor(int mood) {
-    if (mood <= 3) return AppConstants.dangerRed;
-    if (mood <= 6) return AppConstants.warningYellow;
-    return AppConstants.successGreen;
+    if (mood <= 3) return context.colors.error;
+    if (mood <= 6) return context.colors.warning;
+    return context.colors.success;
   }
 
   IconData _getCravingIcon(int craving) {
@@ -424,8 +417,8 @@ class _JournalScreenState extends State<JournalScreen> {
   }
 
   Color _getCravingColor(int craving) {
-    if (craving <= 3) return AppConstants.successGreen;
-    if (craving <= 6) return AppConstants.warningYellow;
-    return AppConstants.dangerRed;
+    if (craving <= 3) return context.colors.success;
+    if (craving <= 6) return context.colors.warning;
+    return context.colors.error;
   }
 }

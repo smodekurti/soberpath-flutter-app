@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+import '../config/theme_extensions.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
+
 import 'notification_settings_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -9,54 +10,57 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: AppConstants.primaryPurple,
+        backgroundColor: context.colors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-            context, AppConstants.paddingLarge)),
+            context, context.spacing.large)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Notifications Section
-            _buildSectionHeader('Notifications'),
+            _buildSectionHeader(context, 'Notifications'),
             _buildSettingsCard(
+              context,
               icon: Icons.notifications_outlined,
               title: 'Notification Settings',
               subtitle: 'Manage reminders and alerts',
               onTap: () => _navigateToNotificationSettings(context),
-              backgroundColor: AppConstants.lightPurple,
-              iconColor: AppConstants.primaryPurple,
+              backgroundColor: context.colors.primary.withValues(alpha: 0.1),
+              iconColor: context.colors.primary,
             ),
 
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
 
             // Privacy & Data Section
-            _buildSectionHeader('Privacy & Data'),
+            _buildSectionHeader(context, 'Privacy & Data'),
             _buildSettingsCard(
+              context,
               icon: Icons.privacy_tip_outlined,
               title: 'Privacy & Data',
               subtitle: 'Manage your personal information',
               onTap: () => _openPrivacySettings(context),
-              backgroundColor: AppConstants.lightBlue,
-              iconColor: AppConstants.blueAccent,
+              backgroundColor: context.colors.secondary.withValues(alpha: 0.1),
+              iconColor: context.colors.secondary,
             ),
 
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
 
             // About Section
-            _buildSectionHeader('About'),
+            _buildSectionHeader(context, 'About'),
             _buildSettingsCard(
+              context,
               icon: Icons.info_outline,
               title: 'About SoberPath',
               subtitle: 'App version and information',
               onTap: () => _showAboutDialog(context),
-              backgroundColor: AppConstants.lightGreen,
-              iconColor: AppConstants.successGreen,
+              backgroundColor: context.colors.surface.withValues(alpha: 0.8),
+              iconColor: context.colors.onSurface,
             ),
           ],
         ),
@@ -64,24 +68,25 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
-      padding: const EdgeInsets.only(
-        bottom: AppConstants.paddingMedium,
+      padding: EdgeInsets.only(
+        bottom: context.spacing.medium,
       ),
-      child: SafeText(
+      child: Text(
         title,
         style: TextStyle(
-          fontSize: AppConstants.fontSizeXLarge,
+          fontSize: context.typography.headlineSmall,
           fontWeight: FontWeight.bold,
-          color: AppConstants.textDark,
+          color: context.colors.onSurface,
         ),
         maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget _buildSettingsCard({
+  Widget _buildSettingsCard(BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
@@ -91,20 +96,20 @@ class SettingsScreen extends StatelessWidget {
   }) {
     return Card(
       elevation: 0,
-      margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      margin: EdgeInsets.only(bottom: context.spacing.medium),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
+        borderRadius: BorderRadius.circular(context.borders.large),
         child: Padding(
-          padding: const EdgeInsets.all(AppConstants.paddingLarge),
+          padding: EdgeInsets.all(context.spacing.large),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(context.spacing.small),
                 decoration: BoxDecoration(
                   color: backgroundColor,
                   borderRadius:
-                      BorderRadius.circular(AppConstants.borderRadiusMedium),
+                      BorderRadius.circular(context.borders.medium),
                 ),
                 child: Icon(
                   icon,
@@ -112,35 +117,37 @@ class SettingsScreen extends StatelessWidget {
                   size: 24,
                 ),
               ),
-              const SizedBox(width: AppConstants.paddingMedium),
+              SizedBox(width: context.spacing.medium),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SafeText(
+                    Text(
                       title,
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeLarge,
+                        fontSize: context.typography.titleMedium,
                         fontWeight: FontWeight.w600,
-                        color: AppConstants.textDark,
+                        color: context.colors.onSurface,
                       ),
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    SafeText(
+                    Text(
                       subtitle,
                       style: TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
-                        color: AppConstants.textGray,
+                        fontSize: context.typography.bodyMedium,
+                        color: context.colors.onSurfaceVariant,
                       ),
                       maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right,
-                color: AppConstants.textGray,
+                color: context.colors.onSurfaceVariant,
               ),
             ],
           ),
@@ -160,9 +167,9 @@ class SettingsScreen extends StatelessWidget {
   void _openPrivacySettings(BuildContext context) {
     // TODO: Implement privacy settings screen
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Privacy settings coming soon!'),
-        backgroundColor: AppConstants.primaryPurple,
+      SnackBar(
+        content: const Text('Privacy settings coming soon!'),
+        backgroundColor: context.colors.primary,
       ),
     );
   }
@@ -172,9 +179,9 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       applicationName: 'SoberPath',
       applicationVersion: '1.0.0',
-      applicationIcon: const Icon(
+      applicationIcon: Icon(
         Icons.favorite,
-        color: AppConstants.primaryPurple,
+        color: context.colors.primary,
         size: 32,
       ),
       children: const [

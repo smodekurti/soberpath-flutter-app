@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+
+import '../config/theme_extensions.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
+import '../widgets/safe_text.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});
@@ -9,7 +11,7 @@ class SupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       body: CustomScrollView(
         slivers: [
           // Header
@@ -20,31 +22,28 @@ class SupportScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: const BoxDecoration(
-                  gradient: AppConstants.purpleGradient,
+                decoration: BoxDecoration(
+                  gradient: context.colors.primaryGradient,
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                    padding: EdgeInsets.all(context.spacing.large),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         SafeText(
                           'Support',
-                          style: TextStyle(
-                            fontSize: AppConstants.fontSizeTitle,
-                            fontWeight: FontWeight.bold,
+                          style: context.textTheme.headlineLarge!.copyWith(
                             color: Colors.white,
                           ),
                           maxLines: 1,
                         ),
-                        const SizedBox(height: AppConstants.paddingSmall),
+                        SizedBox(height: context.spacing.small),
                         SafeText(
                           'Resources for your recovery journey',
-                          style: TextStyle(
-                            fontSize: AppConstants.fontSizeLarge,
-                            color: Colors.white.withValues(alpha: .9),
+                          style: context.textTheme.titleMedium!.copyWith(
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                           maxLines: 2,
                         ),
@@ -58,26 +57,26 @@ class SupportScreen extends StatelessWidget {
 
           // Content
           SliverPadding(
-            padding: const EdgeInsets.all(AppConstants.paddingLarge),
+            padding: EdgeInsets.all(context.spacing.large),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // Crisis Support Section
-                _buildCrisisSupportCard(),
+                _buildCrisisSupportCard(context),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Recovery Resources Section
-                _buildRecoveryResourcesCard(),
+                _buildRecoveryResourcesCard(context),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Professional Help Section
-                _buildProfessionalHelpCard(),
+                _buildProfessionalHelpCard(context),
                 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
                 
                 // Community Support Section
-                _buildCommunitySupportCard(),
+                _buildCommunitySupportCard(context),
               ]),
             ),
           ),
@@ -86,10 +85,10 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCrisisSupportCard() {
+  Widget _buildCrisisSupportCard(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -98,53 +97,55 @@ class SupportScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightRed,
+                    color: context.colors.errorLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.emergency,
-                    color: AppConstants.dangerRed,
+                    color: context.colors.error,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 Flexible(
                   child: SafeText(
                     'Crisis Support',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeXLarge,
+                    style: context.textTheme.titleLarge!.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 1,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
+              context,
               'National Suicide Prevention Lifeline',
               '988',
-              'Available 24/7 for crisis support',
-              () => _makePhoneCall('988'),
+              'Call or text 988 for crisis support',
+              () => _launchUrl('tel:988'),
               Icons.phone,
-              AppConstants.dangerRed,
+              context.colors.error,
             ),
             _buildSupportItem(
+              context,
               'Crisis Text Line',
               'Text HOME to 741741',
-              'Free 24/7 crisis support via text',
-              () => _sendText('741741', 'HOME'),
-              Icons.message,
-              AppConstants.warningYellow,
+              'Free 24/7 crisis counseling',
+              () => _launchUrl('sms:741741'),
+              Icons.sms,
+              context.colors.secondary,
             ),
             _buildSupportItem(
+              context,
               'SAMHSA National Helpline',
-              '1-800-662-4357',
+              '1-800-662-HELP',
               'Treatment referral and information service',
-              () => _makePhoneCall('1-800-662-4357'),
+              () => _launchUrl('tel:18006624357'),
               Icons.support_agent,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -152,10 +153,10 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecoveryResourcesCard() {
+  Widget _buildRecoveryResourcesCard(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -164,51 +165,53 @@ class SupportScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightGreen,
+                    color: context.colors.successLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.library_books,
-                    color: AppConstants.successGreen,
+                    color: context.colors.success,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 SafeText(
                   'Recovery Resources',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                  style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                   maxLines: 1,
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
+              context,
               'AA (Alcoholics Anonymous)',
               'aa.org',
-              'Find meetings and resources',
+              'Find AA meetings and resources',
               () => _launchUrl('https://www.aa.org'),
               Icons.group,
-              AppConstants.primaryPurple,
+              context.colors.primary,
             ),
             _buildSupportItem(
+              context,
               'NA (Narcotics Anonymous)',
               'na.org',
               'Recovery from drug addiction',
               () => _launchUrl('https://www.na.org'),
               Icons.healing,
-              AppConstants.successGreen,
+              context.colors.success,
             ),
             _buildSupportItem(
+              context,
               'SMART Recovery',
               'smartrecovery.org',
-              'Self-management and recovery training',
+              'Self-Management And Recovery Training',
               () => _launchUrl('https://www.smartrecovery.org'),
               Icons.psychology,
-              AppConstants.blueAccent,
+              context.colors.secondary,
             ),
           ],
         ),
@@ -216,10 +219,10 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfessionalHelpCard() {
+  Widget _buildProfessionalHelpCard(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -228,43 +231,44 @@ class SupportScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightBlue,
+                    color: context.colors.infoLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.medical_services,
-                    color: AppConstants.blueAccent,
+                    color: context.colors.info,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 SafeText(
                   'Professional Help',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                  style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                   maxLines: 1,
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
+              context,
               'Find Treatment Facilities',
               'SAMHSA Treatment Locator',
-              'Locate treatment facilities near you',
+              'Search for treatment facilities near you',
               () => _launchUrl('https://findtreatment.samhsa.gov'),
               Icons.location_on,
-              AppConstants.primaryPurple,
+              context.colors.secondary,
             ),
             _buildSupportItem(
-              'Psychology Today',
-              'Find Therapists & Counselors',
-              'Connect with mental health professionals',
-              () => _launchUrl('https://www.psychologytoday.com/us/therapists'),
+              context,
+              'Psychology Today Therapist Directory',
+              'Find therapists specializing in addiction',
+              'Search for therapists by specialty and location',
+              () => _launchUrl('https://www.psychologytoday.com/us/therapists/addiction'),
               Icons.person_search,
-              AppConstants.successGreen,
+              context.colors.secondary,
             ),
           ],
         ),
@@ -272,10 +276,10 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCommunitySupportCard() {
+  Widget _buildCommunitySupportCard(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -284,43 +288,44 @@ class SupportScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
+                    color: context.colors.primaryLight,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.people,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
+                SizedBox(width: context.spacing.medium),
                 SafeText(
                   'Community Support',
-                  style: TextStyle(
-                    fontSize: AppConstants.fontSizeXLarge,
+                  style: context.textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppConstants.textDark,
+                    color: context.colors.onSurface,
                   ),
                   maxLines: 1,
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
+              context,
               'Reddit Recovery Communities',
               'r/stopdrinking, r/leaves, r/addiction',
-              'Connect with others in recovery',
+              'Online forums for peer support',
               () => _launchUrl('https://www.reddit.com/r/stopdrinking'),
               Icons.forum,
-              AppConstants.warningYellow,
+              context.colors.secondary,
             ),
             _buildSupportItem(
+              context,
               'In The Rooms',
               'Online Recovery Meetings',
               'Virtual support group meetings',
               () => _launchUrl('https://www.intherooms.com'),
               Icons.video_call,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -328,21 +333,14 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSupportItem(
-    String title,
-    String subtitle,
-    String description,
-    VoidCallback onTap,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildSupportItem(BuildContext context, String title, String subtitle, String description, VoidCallback onTap, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      padding: EdgeInsets.only(bottom: context.spacing.medium),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+        borderRadius: BorderRadius.circular(context.borders.small),
         child: Padding(
-          padding: const EdgeInsets.all(AppConstants.paddingMedium),
+          padding: EdgeInsets.all(context.spacing.medium),
           child: Row(
             children: [
               Icon(
@@ -350,43 +348,40 @@ class SupportScreen extends StatelessWidget {
                 color: color,
                 size: 24,
               ),
-              const SizedBox(width: AppConstants.paddingMedium),
+              SizedBox(width: context.spacing.medium),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SafeText(
                       title,
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeLarge,
-                        fontWeight: FontWeight.w600,
-                        color: AppConstants.textDark,
+                      style: context.textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: context.colors.onSurface,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                     ),
                     SafeText(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
-                        fontWeight: FontWeight.w500,
-                        color: color,
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: context.colors.onSurfaceVariant,
                       ),
-                      maxLines: 2,
+                      maxLines: 1,
                     ),
+                    SizedBox(height: context.spacing.small),
                     SafeText(
                       description,
-                      style: TextStyle(
-                        fontSize: AppConstants.fontSizeSmall,
-                        color: AppConstants.textGray,
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
                       ),
-                      maxLines: 3,
+                      maxLines: 2,
                     ),
                   ],
                 ),
               ),
               Icon(
                 Icons.open_in_new,
-                color: AppConstants.textGray,
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.8),
                 size: 16,
               ),
             ],
@@ -394,20 +389,6 @@ class SupportScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
-    if (await canLaunchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
-    }
-  }
-
-  Future<void> _sendText(String phoneNumber, String message) async {
-    final Uri smsUri = Uri(scheme: 'sms', path: phoneNumber, queryParameters: {'body': message});
-    if (await canLaunchUrl(smsUri)) {
-      await launchUrl(smsUri);
-    }
   }
 
   Future<void> _launchUrl(String url) async {

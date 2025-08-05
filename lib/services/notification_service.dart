@@ -5,7 +5,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import '../models/sobriety_models.dart';
-import '../constants/app_constants.dart';
+import '../config/app_config.dart';
 import '../main.dart';
 
 class NotificationService {
@@ -303,6 +303,7 @@ class NotificationService {
 
       // In production, you might want to log this or send to analytics
       // For debugging, this information is now available
+      // ignore: avoid_print
       print('iOS Notification Debug Info: $debugInfo');
     } catch (e) {
       // Silently handle iOS debug errors in production
@@ -602,8 +603,8 @@ class NotificationService {
       final currentTime = tz.TZDateTime.now(tz.local);
 
       // Get quote based on current day
-      final quote = AppConstants.motivationalQuotes[
-          (currentTime.day + i) % AppConstants.motivationalQuotes.length];
+      final quote = AppConfig.content.motivationalQuotes[
+          (currentTime.day + i) % AppConfig.content.motivationalQuotes.length];
 
       // Create scheduled time
       final scheduledTime = _createScheduledTime(hour, 0);

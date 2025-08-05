@@ -228,8 +228,4 @@ class NotificationManager with ChangeNotifier {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }

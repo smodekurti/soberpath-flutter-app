@@ -2,10 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soberpath_app/widgets/safe_text.dart';
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 import '../models/sobriety_models.dart';
-import '../utils/responsive_helpers.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
 import 'main_navigation_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -46,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _nextPage() {
     if (_currentPage < 2) {
       _pageController.nextPage(
-        duration: AppConstants.animationMedium,
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     } else {
@@ -57,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _previousPage() {
     if (_currentPage > 0) {
       _pageController.previousPage(
-        duration: AppConstants.animationMedium,
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
@@ -105,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppConstants.dangerRed,
+        backgroundColor: context.colors.error,
       ),
     );
   }
@@ -119,8 +120,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppConstants.primaryPurple,
+            colorScheme: ColorScheme.light(
+              primary: context.colors.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -144,8 +145,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppConstants.purpleGradient,
+        decoration: BoxDecoration(
+          gradient: context.colors.primaryGradient,
         ),
         child: SafeArea(
           child: LayoutBuilder(
@@ -157,9 +158,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     height: isLargeScreen ? 80 : 70,
                     padding: EdgeInsets.symmetric(
                       horizontal: ResponsiveHelpers.getResponsivePadding(
-                          context, AppConstants.paddingLarge),
+                          context, context.spacing.large),
                       vertical: ResponsiveHelpers.getResponsivePadding(
-                          context, AppConstants.paddingMedium),
+                          context, context.spacing.medium),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -180,7 +181,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                  context, AppConstants.fontSizeXLarge),
+                                  context, context.typography.displayMedium),
                               fontWeight: FontWeight.w600,
                             ),
                             maxLines: 1,
@@ -197,14 +198,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     height: 20,
                     padding: EdgeInsets.symmetric(
                         horizontal: ResponsiveHelpers.getResponsivePadding(
-                            context, AppConstants.paddingLarge)),
+                            context, context.spacing.large)),
                     child: Row(
                       children: List.generate(3, (index) {
                         return Expanded(
                           child: Container(
                             height: 4,
                             margin: EdgeInsets.only(
-                              right: index < 2 ? AppConstants.paddingSmall : 0,
+                              right: index < 2 ? context.spacing.small : 0,
                             ),
                             decoration: BoxDecoration(
                               color: index <= _currentPage
@@ -247,7 +248,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     height: isLargeScreen ? 90 : 70,
                     padding: EdgeInsets.all(
                         ResponsiveHelpers.getResponsivePadding(
-                            context, AppConstants.paddingLarge)),
+                            context, context.spacing.large)),
                     child: SizedBox(
                       width: double.infinity,
                       child: GestureDetector(
@@ -258,24 +259,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadiusLarge),
-                            boxShadow: [
+                                context.borders.large),
+                            boxShadow: const [
                               BoxShadow(
                                 color: Colors.black26,
                                 blurRadius: 6,
-                                offset: const Offset(0, 3),
+                                offset: Offset(0, 3),
                               ),
                             ],
                           ),
                           child: Center(
                             child: _isLoading
-                                ? const SizedBox(
+                                ? SizedBox(
                                     height: 20,
                                     width: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppConstants.primaryPurple,
+                                        context.colors.primary,
                                       ),
                                     ),
                                   )
@@ -288,7 +289,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       fontSize: ResponsiveHelpers
                                           .getResponsiveFontSize(context, 14.0),
                                       fontWeight: FontWeight.bold,
-                                      color: AppConstants.primaryPurple,
+                                      color: context.colors.primary,
                                       height: 1.0,
                                     ),
                                   ),
@@ -309,7 +310,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildWelcomePage(BoxConstraints constraints) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-          context, AppConstants.paddingMedium)),
+          context, context.spacing.medium)),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: constraints.maxHeight - 100,
@@ -332,12 +333,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
             SafeText(
               'Welcome to SoberPath',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeXXLarge),
+                    context, context.typography.headlineLarge),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -346,12 +347,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
             SafeText(
               'Your personal companion for recovery and sobriety tracking. Let\'s set up your profile to get started.',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, context.typography.titleLarge),
                 color: Colors.white.withValues(alpha: .9),
                 height: 1.4,
               ),
@@ -360,7 +361,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
             _buildFeatureList(),
           ],
         ),
@@ -381,7 +382,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         return Padding(
           padding: EdgeInsets.symmetric(
               vertical: ResponsiveHelpers.getResponsivePadding(
-                  context, AppConstants.paddingSmall)),
+                  context, context.spacing.small)),
           child: Row(
             children: [
               Container(
@@ -394,13 +395,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               SizedBox(
                   width: ResponsiveHelpers.getResponsivePadding(
-                      context, AppConstants.paddingMedium)),
+                      context, context.spacing.medium)),
               Expanded(
                 child: SafeText(
                   feature,
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                        context, AppConstants.fontSizeMedium),
+                        context, context.typography.bodyLarge),
                     color: Colors.white.withValues(alpha: .9),
                   ),
                   maxLines: 2,
@@ -416,7 +417,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildPersonalInfoPage(BoxConstraints constraints) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-          context, AppConstants.paddingMedium)),
+          context, context.spacing.medium)),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: constraints.maxHeight - 100,
@@ -427,12 +428,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
             SafeText(
               'Tell us about yourself',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeXXLarge),
+                    context, context.typography.headlineLarge),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -440,26 +441,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             SafeText(
               'This information helps us personalize your experience.',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, context.typography.titleLarge),
                 color: Colors.white.withValues(alpha: .9),
               ),
               maxLines: 3,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Name Input
             SafeText(
               'What should we call you?',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, context.typography.titleLarge),
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
@@ -467,7 +468,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             TextField(
               controller: _nameController,
               style: const TextStyle(color: Colors.black),
@@ -480,38 +481,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Substance Type Selection
             AutoSizeText(
               'What substance are you recovering from?',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeMedium),
+                    context, context.typography.bodyLarge),
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
               maxLines: 3,
               minFontSize: 12,
-              maxFontSize: AppConstants.fontSizeMedium,
+              maxFontSize: context.typography.bodyLarge,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusLarge),
+                    BorderRadius.circular(context.borders.large),
               ),
               child: DropdownButtonFormField<String>(
                 value: _selectedSubstance,
                 isExpanded: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.paddingLarge,
-                    vertical: AppConstants.paddingMedium,
+                    horizontal: context.spacing.large,
+                    vertical: context.spacing.medium,
                   ),
                 ),
                 items: _substanceOptions.map((substance) {
@@ -542,7 +543,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildSobrietyDetailsPage(BoxConstraints constraints) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-          context, AppConstants.paddingMedium)),
+          context, context.spacing.medium)),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: constraints.maxHeight - 100,
@@ -553,12 +554,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
             SafeText(
               'Sobriety Details',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeXXLarge),
+                    context, context.typography.headlineLarge),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -566,47 +567,46 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             SafeText(
               'Help us track your progress and savings.',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeMedium),
+                    context, context.typography.bodyLarge),
                 color: Colors.white.withValues(alpha: .9),
               ),
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Sobriety Date
             AutoSizeText(
               'When did you start your sobriety journey?',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, context.typography.titleLarge),
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
               maxLines: 2,
               minFontSize: 14,
-              maxFontSize: AppConstants.fontSizeLarge,
+              maxFontSize: context.typography.titleLarge,
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             GestureDetector(
               onTap: _selectSoberDate,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppConstants.paddingLarge,
-                  vertical: AppConstants.paddingLarge,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.spacing.large,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius:
-                      BorderRadius.circular(AppConstants.borderRadiusLarge),
+                      BorderRadius.circular(context.spacing.large),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -621,7 +621,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ? Colors.black
                               : Colors.grey[600],
                           fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                              context, AppConstants.fontSizeMedium),
+                              context, context.typography.bodyLarge),
                         ),
                         maxLines: 1,
                       ),
@@ -637,14 +637,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Usage Frequency
             SafeText(
               'How often did you use?',
               style: TextStyle(
                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                    context, AppConstants.fontSizeLarge),
+                    context, context.typography.titleLarge),
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
@@ -652,21 +652,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusLarge),
+                    BorderRadius.circular(context.borders.large),
               ),
               child: DropdownButtonFormField<UsageFrequency>(
                 value: _selectedUsageFrequency,
                 isExpanded: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: AppConstants.paddingLarge,
-                    vertical: AppConstants.paddingMedium,
+                    horizontal: context.spacing.large,
+                    vertical: context.spacing.medium,
                   ),
                 ),
                 items: UsageFrequency.values.map((frequency) {
@@ -691,7 +691,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             // Daily Cost
             Column(
@@ -701,7 +701,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   'How much did you spend per day on the days you actually used?',
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                        context, AppConstants.fontSizeLarge),
+                        context, context.typography.titleLarge),
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -712,8 +712,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   '(optional)',
                   style: TextStyle(
                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                        context, AppConstants.fontSizeSmall),
-                    color: Colors.white.withValues(alpha: .7),
+                        context, context.typography.bodySmall),
+                    color: Colors.white.withValues(alpha: 0.7),
                   ),
                   maxLines: 1,
                 ),
@@ -721,7 +721,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingMedium)),
+                    context, context.spacing.medium)),
             TextField(
               controller: _dailyCostController,
               keyboardType: TextInputType.number,
@@ -736,14 +736,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             SizedBox(
                 height: ResponsiveHelpers.getResponsivePadding(
-                    context, AppConstants.paddingLarge)),
+                    context, context.spacing.large)),
 
             Container(
-              padding: const EdgeInsets.all(AppConstants.paddingLarge),
+              padding: EdgeInsets.all(context.spacing.large),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: .1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusLarge),
+                    BorderRadius.circular(context.borders.large),
               ),
               child: Row(
                 children: [
@@ -752,14 +752,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color: Colors.white,
                     size: 20,
                   ),
-                  const SizedBox(width: AppConstants.paddingMedium),
+                  SizedBox(width: context.spacing.medium),
                   Expanded(
                     child: SafeText(
                       'We\'ll calculate your savings based on your usage frequency and daily spending.',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: .9),
                         fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                            context, AppConstants.fontSizeMedium),
+                            context, context.typography.bodyLarge),
                       ),
                       maxLines: 4,
                     ),

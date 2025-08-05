@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soberpath_app/widgets/safe_text.dart';
+//import "package:auto_size_text/auto_size_text.dart";
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+import '../config/theme_extensions.dart';
+import '../config/app_config.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
+
 
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
@@ -13,17 +17,17 @@ class AppHeader extends StatelessWidget {
       builder: (context, provider, child) {
         
         return Container(
-          decoration: const BoxDecoration(
-            gradient: AppConstants.purpleGradient,
+          decoration: BoxDecoration(
+            gradient: context.colors.primaryGradient,
           ),
           child: SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppConstants.paddingLarge,
-                AppConstants.paddingLarge,
-                AppConstants.paddingLarge,
-                AppConstants.paddingXLarge,
+              padding: EdgeInsets.fromLTRB(
+                context.spacing.large,
+                context.spacing.large,
+                context.spacing.large,
+                context.spacing.large,
               ),
               child: Column(
                 children: [
@@ -36,20 +40,20 @@ class AppHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SafeText(
-                              AppConstants.appName,
+                              AppConfig.info.name,
                               style: TextStyle(
                                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                    context, AppConstants.fontSizeXXLarge),
+                                    context, context.typography.headlineLarge),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
                               maxLines: 1,
                             ),
                             SafeText(
-                              AppConstants.appTagline,
+                              AppConfig.info.tagline,
                               style: TextStyle(
                                 fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                    context, AppConstants.fontSizeMedium),
+                                    context, context.typography.bodyMedium),
                                 color: Colors.white.withValues(alpha: .9),
                               ),
                               maxLines: 2,
@@ -59,13 +63,13 @@ class AppHeader extends StatelessWidget {
                       ),
                       
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppConstants.paddingMedium,
-                          vertical: AppConstants.paddingSmall,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.spacing.medium,
+                          vertical: context.spacing.small,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: .2),
-                          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+                          borderRadius: BorderRadius.circular(context.borders.medium),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -74,7 +78,7 @@ class AppHeader extends StatelessWidget {
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: .3),
-                                borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                                borderRadius: BorderRadius.circular(context.borders.small),
                               ),
                               child: const Icon(
                                 Icons.savings_outlined,
@@ -82,7 +86,7 @@ class AppHeader extends StatelessWidget {
                                 size: 16,
                               ),
                             ),
-                            const SizedBox(width: AppConstants.paddingSmall),
+                            SizedBox(width: context.spacing.small),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -90,7 +94,7 @@ class AppHeader extends StatelessWidget {
                                   '\$${provider.moneySaved.toStringAsFixed(0)}',
                                   style: TextStyle(
                                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                        context, AppConstants.fontSizeLarge),
+                                        context, context.typography.bodyLarge),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -102,7 +106,7 @@ class AppHeader extends StatelessWidget {
                                   'saved',
                                   style: TextStyle(
                                     fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                        context, AppConstants.fontSizeSmall),
+                                        context, context.typography.labelSmall),
                                     color: Colors.white.withValues(alpha: .9),
                                   ),
                                   maxLines: 1,

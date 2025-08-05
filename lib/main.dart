@@ -1,17 +1,14 @@
-// Add this to your main.dart file
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'config/app_config.dart';
+import 'config/theme_extensions.dart';
 import 'services/app_state_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_navigation_screen.dart';
-import 'constants/app_constants.dart';
 
-// Add this global navigator key
+// Global navigator key for navigation from anywhere in the app
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
@@ -26,10 +23,12 @@ class SoberPathApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AppStateProvider(),
       child: MaterialApp(
-        title: AppConstants.appName,
+        title: AppConfig.info.name,
         debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey, // Add this line
-        theme: _buildTheme(),
+        navigatorKey: navigatorKey,
+        theme: SoberPathThemeData.lightTheme(),
+        darkTheme: SoberPathThemeData.darkTheme(),
+        themeMode: AppConfig.theme.defaultThemeMode,
         home: const AppInitializer(),
         routes: {
           '/checkIn': (context) => const MainNavigationScreen(initialIndex: 0),
@@ -37,121 +36,6 @@ class SoberPathApp extends StatelessWidget {
           '/support': (context) => const MainNavigationScreen(initialIndex: 3),
           '/home': (context) => const MainNavigationScreen(initialIndex: 0),
         },
-      ),
-    );
-  }
-
-  // Your existing _buildTheme() method stays the same
-  ThemeData _buildTheme() {
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppConstants.primaryPurple,
-        brightness: Brightness.light,
-      ),
-      textTheme: GoogleFonts.interTextTheme(),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppConstants.primaryPurple,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.paddingLarge,
-            vertical: AppConstants.paddingMedium,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          ),
-          textStyle: const TextStyle(
-            fontSize: AppConstants.fontSizeLarge,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppConstants.primaryPurple,
-          side: const BorderSide(color: AppConstants.primaryPurple),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppConstants.paddingLarge,
-            vertical: AppConstants.paddingMedium,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          ),
-          textStyle: const TextStyle(
-            fontSize: AppConstants.fontSizeLarge,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppConstants.borderGray),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppConstants.borderGray),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          borderSide:
-              const BorderSide(color: AppConstants.primaryPurple, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
-          borderSide: const BorderSide(color: AppConstants.dangerRed),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.paddingLarge,
-          vertical: AppConstants.paddingMedium,
-        ),
-      ),
-      cardTheme: CardThemeData(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusXLarge),
-        ),
-        color: AppConstants.cardWhite,
-        surfaceTintColor: Colors.transparent,
-      ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Colors.white,
-        selectedItemColor: AppConstants.primaryPurple,
-        unselectedItemColor: AppConstants.textGray,
-        type: BottomNavigationBarType.fixed,
-        elevation: 8,
-        selectedLabelStyle: TextStyle(
-          fontSize: AppConstants.fontSizeSmall,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontSize: AppConstants.fontSizeSmall,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      sliderTheme: SliderThemeData(
-        activeTrackColor: AppConstants.primaryPurple,
-        inactiveTrackColor: AppConstants.borderGray,
-        thumbColor: AppConstants.primaryPurple,
-        overlayColor: AppConstants.primaryPurple.withValues(alpha: 0.2),
-        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
-        trackHeight: 4,
       ),
     );
   }

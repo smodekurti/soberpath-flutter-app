@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import '../services/app_state_provider.dart';
 import '../services/notification_service.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 
 class IOSNotificationDebugScreen extends StatefulWidget {
   const IOSNotificationDebugScreen({super.key});
@@ -153,21 +153,20 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
 
   Widget _buildStatusCard(String title, Widget content) {
     return Card(
-      margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      margin: EdgeInsets.only(bottom: context.spacing.medium),
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: AppConstants.fontSizeXLarge,
+              style: context.textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppConstants.primaryPurple,
+                color: context.colors.primary,
               ),
             ),
-            const SizedBox(height: AppConstants.paddingMedium),
+            SizedBox(height: context.spacing.medium),
             content,
           ],
         ),
@@ -181,9 +180,9 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
       child: ElevatedButton(
         onPressed: _isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? AppConstants.primaryPurple,
+          backgroundColor: color ?? context.colors.primary,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: AppConstants.paddingMedium),
+          padding: EdgeInsets.symmetric(vertical: context.spacing.medium),
         ),
         child: Text(label),
       ),
@@ -196,23 +195,23 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
       return Scaffold(
         appBar: AppBar(
           title: const Text('iOS Notification Debug'),
-          backgroundColor: AppConstants.primaryPurple,
+          backgroundColor: context.colors.primary,
           foregroundColor: Colors.white,
         ),
-        body: const Center(
+        body: Center(
           child: Text(
             'This screen is only available on iOS devices.',
-            style: TextStyle(fontSize: AppConstants.fontSizeLarge),
+            style: context.textTheme.titleMedium,
           ),
         ),
       );
     }
 
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         title: const Text('iOS Notification Debug'),
-        backgroundColor: AppConstants.primaryPurple,
+        backgroundColor: context.colors.primary,
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -224,7 +223,7 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(AppConstants.paddingLarge),
+              padding: EdgeInsets.all(context.spacing.large),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -242,8 +241,8 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
                                   style: TextStyle(
                                     color: entry.key == 'authorizationStatus' && 
                                            (entry.value == 'authorized' || entry.value == 'provisional')
-                                        ? AppConstants.successGreen
-                                        : AppConstants.textDark,
+                                        ? context.colors.success
+                                        : Colors.black87,
                                   ),
                                 ),
                               );
@@ -257,18 +256,18 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
                     'Scheduled Notifications',
                     _pendingNotifications != null
                         ? _pendingNotifications!.isEmpty
-                            ? const Text(
+                            ? Text(
                                 'No notifications scheduled',
-                                style: TextStyle(color: AppConstants.warningYellow),
+                                style: TextStyle(color: context.colors.warning),
                               )
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: _pendingNotifications!.map((notification) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(bottom: 4),
+                                    padding: EdgeInsets.only(bottom: context.spacing.small),
                                     child: Text(
                                       notification,
-                                      style: const TextStyle(fontSize: AppConstants.fontSizeSmall),
+                                      style: context.textTheme.bodySmall,
                                     ),
                                   );
                                 }).toList(),
@@ -284,66 +283,65 @@ class _IOSNotificationDebugScreenState extends State<IOSNotificationDebugScreen>
                         _lastTestResult!,
                         style: TextStyle(
                           color: _lastTestResult!.contains('failed') || _lastTestResult!.contains('Error')
-                              ? AppConstants.dangerRed
-                              : AppConstants.successGreen,
+                              ? context.colors.error
+                              : context.colors.success,
                         ),
                       ),
                     ),
 
                   // Action Buttons
-                  const Text(
+                  Text(
                     'Actions',
-                    style: TextStyle(
-                      fontSize: AppConstants.fontSizeXLarge,
+                    style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: AppConstants.paddingMedium),
+                  SizedBox(height: context.spacing.medium),
 
                   _buildActionButton(
                     'Request Notification Permissions',
                     _requestPermissions,
-                    color: AppConstants.blueAccent,
+                    color: context.colors.secondary,
                   ),
-                  const SizedBox(height: AppConstants.paddingSmall),
+                  SizedBox(height: context.spacing.small),
 
                   _buildActionButton(
                     'Send Test Notification',
                     _sendTestNotification,
-                    color: AppConstants.successGreen,
+                    color: context.colors.success,
                   ),
-                  const SizedBox(height: AppConstants.paddingSmall),
+                  SizedBox(height: context.spacing.small),
 
                   _buildActionButton(
                     'Schedule Daily Reminder',
                     _scheduleDailyReminder,
                   ),
-                  const SizedBox(height: AppConstants.paddingSmall),
+                  SizedBox(height: context.spacing.small),
 
                   _buildActionButton(
                     'Run iOS Debug Analysis',
                     _runIOSDebug,
-                    color: AppConstants.warningYellow,
+                    color: context.colors.warning,
                   ),
 
-                  const SizedBox(height: AppConstants.paddingLarge),
+                  SizedBox(height: context.spacing.large),
 
                   // Instructions
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                      padding: EdgeInsets.all(context.spacing.large),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Troubleshooting Steps:',
                             style: TextStyle(
-                              fontSize: AppConstants.fontSizeLarge,
+                              fontSize: context.textTheme.titleMedium?.fontSize,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: AppConstants.paddingSmall),
+                          SizedBox(height: context.spacing.small),
                           const Text('1. Ensure notification permissions are granted'),
                           const Text('2. Test immediate notifications work'),
                           const Text('3. Schedule daily reminder and verify it appears in pending list'),

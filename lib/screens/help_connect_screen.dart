@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../constants/app_constants.dart';
+import '../config/theme_extensions.dart';
 
 class HelpConnectScreen extends StatefulWidget {
   const HelpConnectScreen({super.key});
@@ -28,24 +28,24 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       body: Column(
         children: [
           // Custom Header
           Container(
-            decoration: const BoxDecoration(
-              gradient: AppConstants.purpleGradient,
+            decoration: BoxDecoration(
+              gradient: context.colors.primaryGradient,
             ),
             child: SafeArea(
               child: Column(
                 children: [
                   // Title Section
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppConstants.paddingLarge,
-                      AppConstants.paddingLarge,
-                      AppConstants.paddingLarge,
-                      AppConstants.paddingMedium,
+                    padding: EdgeInsets.fromLTRB(
+                      context.spacing.large,
+                      context.spacing.large,
+                      context.spacing.large,
+                      context.spacing.medium,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,23 +64,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                                 size: 24,
                               ),
                             ),
-                            const SizedBox(width: AppConstants.paddingMedium),
-                            const Expanded(
+                            SizedBox(width: context.spacing.medium),
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Help & Connect',
                                     style: TextStyle(
-                                      fontSize: AppConstants.fontSizeTitle,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: context.typography.titleLarge,
+                                      fontWeight: context.typography.bold,
                                       color: Colors.white,
                                     ),
                                   ),
                                   Text(
                                     'Support when you need it most',
                                     style: TextStyle(
-                                      fontSize: AppConstants.fontSizeMedium,
+                                      fontSize: context.typography.bodyMedium,
                                       color: Colors.white70,
                                     ),
                                   ),
@@ -95,44 +95,44 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                   
                   // Tab Bar
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: AppConstants.paddingLarge,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: context.spacing.large,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
+                      borderRadius: BorderRadius.circular(context.borders.large),
                     ),
                     child: TabBar(
                       controller: _tabController,
                       indicator: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadiusLarge),
+                        borderRadius: BorderRadius.circular(context.borders.large),
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
                       dividerColor: Colors.transparent,
                       labelColor: Colors.white,
                       unselectedLabelColor: Colors.white.withValues(alpha: 0.7),
-                      labelStyle: const TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
+                      labelStyle: TextStyle(
+                        fontSize: context.typography.bodyMedium,
                         fontWeight: FontWeight.w600,
                       ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontSize: AppConstants.fontSizeMedium,
+                      unselectedLabelStyle: TextStyle(
+                        fontSize: context.typography.bodyMedium,
                         fontWeight: FontWeight.w500,
                       ),
-                      tabs: [
-                        const Tab(
+                      tabs: const [
+                        Tab(
                           height: 44,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.sos, size: 18),
-                              const SizedBox(width: 6),
+                              Icon(Icons.sos, size: 18),
+                              SizedBox(width: 6),
                               Flexible(
                                 child: Text(
                                   'Crisis Support',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 13,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -141,18 +141,18 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                             ],
                           ),
                         ),
-                        const Tab(
+                        Tab(
                           height: 44,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.people, size: 18),
-                              const SizedBox(width: 6),
+                              Icon(Icons.people, size: 18),
+                              SizedBox(width: 6),
                               Flexible(
                                 child: Text(
                                   'Find Meetings',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 13,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -164,7 +164,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppConstants.paddingLarge),
+                  SizedBox(height: context.spacing.large),
                 ],
               ),
             ),
@@ -189,23 +189,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
 
   Widget _buildCrisisSupportTab() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppConstants.paddingLarge),
+      padding: EdgeInsets.all(context.spacing.large),
       child: Column(
         children: [
           // Emergency Crisis Support
           _buildCrisisSupportCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Recovery Resources
           _buildRecoveryResourcesCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Professional Help
           _buildProfessionalHelpCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Community Support
           _buildCommunitySupportCard(),
@@ -216,23 +216,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
 
   Widget _buildMeetingsTab() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppConstants.paddingLarge),
+      padding: EdgeInsets.all(context.spacing.large),
       child: Column(
         children: [
           // Quick Meeting Finder
           _buildQuickMeetingFinderCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Online Meetings
           _buildOnlineMeetingsCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Meeting Resources
           _buildMeetingResourcesCard(),
           
-          const SizedBox(height: AppConstants.paddingLarge),
+          SizedBox(height: context.spacing.large),
           
           // Meeting Preparation Tips
           _buildMeetingTipsCard(),
@@ -245,7 +245,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildCrisisSupportCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -254,23 +254,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightRed,
+                    color: context.colors.error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.emergency,
-                    color: AppConstants.dangerRed,
+                    color: context.colors.error,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Emergency Crisis Support',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -278,14 +278,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'National Suicide Prevention Lifeline',
               '988',
               'Available 24/7 for crisis support',
               () => _makePhoneCall('988'),
               Icons.phone,
-              AppConstants.dangerRed,
+              context.colors.error,
             ),
             _buildSupportItem(
               'Crisis Text Line',
@@ -293,7 +293,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Free 24/7 crisis support via text',
               () => _sendText('741741', 'HOME'),
               Icons.message,
-              AppConstants.warningYellow,
+              context.colors.secondary,
             ),
             _buildSupportItem(
               'SAMHSA National Helpline',
@@ -301,7 +301,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Treatment referral and information service',
               () => _makePhoneCall('1-800-662-4357'),
               Icons.support_agent,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -312,7 +312,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildRecoveryResourcesCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -321,23 +321,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightGreen,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.library_books,
-                    color: AppConstants.successGreen,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Recovery Resources',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -345,14 +345,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'AA (Alcoholics Anonymous)',
               'aa.org',
               'Find meetings and resources',
               () => _launchUrl('https://www.aa.org'),
               Icons.group,
-              AppConstants.primaryPurple,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'NA (Narcotics Anonymous)',
@@ -360,7 +360,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Recovery from drug addiction',
               () => _launchUrl('https://www.na.org'),
               Icons.healing,
-              AppConstants.successGreen,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'SMART Recovery',
@@ -368,7 +368,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Self-management and recovery training',
               () => _launchUrl('https://www.smartrecovery.org'),
               Icons.psychology,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -379,7 +379,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildProfessionalHelpCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -388,23 +388,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightBlue,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.medical_services,
-                    color: AppConstants.blueAccent,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Professional Help',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -412,14 +412,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'Find Treatment Facilities',
               'SAMHSA Treatment Locator',
               'Locate treatment facilities near you',
               () => _launchUrl('https://findtreatment.samhsa.gov'),
               Icons.location_on,
-              AppConstants.primaryPurple,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'Psychology Today',
@@ -427,7 +427,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Connect with mental health professionals',
               () => _launchUrl('https://www.psychologytoday.com/us/therapists'),
               Icons.person_search,
-              AppConstants.successGreen,
+              context.colors.primary,
             ),
           ],
         ),
@@ -438,7 +438,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildCommunitySupportCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -447,23 +447,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.people,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Community Support',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -471,14 +471,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'Reddit Recovery Communities',
               'r/stopdrinking, r/leaves, r/addiction',
               'Connect with others in recovery',
               () => _launchUrl('https://www.reddit.com/r/stopdrinking'),
               Icons.forum,
-              AppConstants.warningYellow,
+              context.colors.secondary,
             ),
             _buildSupportItem(
               'In The Rooms',
@@ -486,7 +486,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Virtual support group meetings',
               () => _launchUrl('https://www.intherooms.com'),
               Icons.video_call,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -498,7 +498,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildQuickMeetingFinderCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -507,23 +507,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightBlue,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.search,
-                    color: AppConstants.blueAccent,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Find Local Meetings',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -531,14 +531,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'AA Meeting Guide',
               'Official AA meeting finder app',
               'Find in-person and online AA meetings',
               () => _launchUrl('https://meetingguide.org/'),
               Icons.location_on,
-              AppConstants.primaryPurple,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'NA Meeting Search',
@@ -546,7 +546,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Locate NA meetings worldwide',
               () => _launchUrl('https://www.na.org/meetingsearch/'),
               Icons.search,
-              AppConstants.successGreen,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'SMART Recovery Meetings',
@@ -554,7 +554,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Self-management recovery meetings',
               () => _launchUrl('https://www.smartrecovery.org/meetings/'),
               Icons.psychology,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -565,7 +565,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildOnlineMeetingsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -574,23 +574,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightGreen,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.video_call,
-                    color: AppConstants.successGreen,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Online Meetings',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -598,14 +598,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'AA Online Intergroup',
               '24/7 online AA meetings',
               'Join meetings from anywhere',
               () => _launchUrl('https://aa-intergroup.org/'),
               Icons.video_call,
-              AppConstants.primaryPurple,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'In The Rooms',
@@ -613,7 +613,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Multiple recovery programs online',
               () => _launchUrl('https://www.intherooms.com'),
               Icons.people,
-              AppConstants.successGreen,
+              context.colors.primary,
             ),
             _buildSupportItem(
               'Recovery Dharma Online',
@@ -621,7 +621,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Mindfulness-based recovery meetings',
               () => _launchUrl('https://recoverydharma.online/'),
               Icons.self_improvement,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -632,7 +632,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildMeetingResourcesCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -641,23 +641,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightPurple,
+                    color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.library_books,
-                    color: AppConstants.primaryPurple,
+                    color: context.colors.primary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Meeting Resources',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -665,14 +665,14 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
+            SizedBox(height: context.spacing.large),
             _buildSupportItem(
               'First Meeting Guide',
               'What to expect at your first meeting',
               'Tips for newcomers',
               () => _showFirstMeetingDialog(),
               Icons.help_outline,
-              AppConstants.warningYellow,
+              context.colors.secondary,
             ),
             _buildSupportItem(
               'Meeting Etiquette',
@@ -680,7 +680,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               'Respectful participation guidelines',
               () => _showMeetingEtiquetteDialog(),
               Icons.handshake,
-              AppConstants.blueAccent,
+              context.colors.primary,
             ),
           ],
         ),
@@ -691,7 +691,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
   Widget _buildMeetingTipsCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppConstants.paddingLarge),
+        padding: EdgeInsets.all(context.spacing.large),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -700,23 +700,23 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppConstants.lightYellow,
+                    color: context.colors.secondary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.lightbulb_outline,
-                    color: AppConstants.warningYellow,
+                    color: context.colors.secondary,
                     size: 20,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingMedium),
-                const Expanded(
+                SizedBox(width: context.spacing.medium),
+                Expanded(
                   child: Text(
                     'Meeting Tips',
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeLarge,
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.bold,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -724,8 +724,8 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 ),
               ],
             ),
-            const SizedBox(height: AppConstants.paddingLarge),
-            const Text(
+            SizedBox(height: context.spacing.large),
+            Text(
               '💡 Try different meetings to find the right fit\n'
               '🤝 You don\'t have to share if you\'re not ready\n'
               '📱 Arrive early to get comfortable\n'
@@ -733,8 +733,8 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
               '👥 Consider getting a sponsor when ready\n'
               '📝 Bring a notebook for insights',
               style: TextStyle(
-                fontSize: AppConstants.fontSizeMedium,
-                color: AppConstants.textDark,
+                fontSize: context.typography.bodyMedium,
+                color: context.colors.onSurface,
                 height: 1.5,
               ),
             ),
@@ -753,10 +753,10 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
     Color color,
   ) {
     return Container(
-      margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      margin: EdgeInsets.only(bottom: context.spacing.medium),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+        borderRadius: BorderRadius.circular(context.borders.medium),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -769,9 +769,9 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+          borderRadius: BorderRadius.circular(context.borders.medium),
           child: Padding(
-            padding: const EdgeInsets.all(AppConstants.paddingLarge),
+            padding: EdgeInsets.all(context.spacing.large),
             child: Row(
               children: [
                 Container(
@@ -786,17 +786,17 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                     size: 24,
                   ),
                 ),
-                const SizedBox(width: AppConstants.paddingLarge),
+                SizedBox(width: context.spacing.large),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeLarge,
+                        style: TextStyle(
+                          fontSize: context.typography.titleMedium,
                           fontWeight: FontWeight.w600,
-                          color: AppConstants.textDark,
+                          color: context.colors.onSurface,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -805,7 +805,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                       Text(
                         subtitle,
                         style: TextStyle(
-                          fontSize: AppConstants.fontSizeMedium,
+                          fontSize: context.typography.bodyMedium,
                           fontWeight: FontWeight.w500,
                           color: color,
                         ),
@@ -815,9 +815,9 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                       const SizedBox(height: 4),
                       Text(
                         description,
-                        style: const TextStyle(
-                          fontSize: AppConstants.fontSizeSmall,
-                          color: AppConstants.textGray,
+                        style: TextStyle(
+                          fontSize: context.typography.bodySmall,
+                          color: context.colors.onSurfaceVariant,
                           height: 1.3,
                         ),
                         maxLines: 3,
@@ -829,12 +829,12 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: AppConstants.backgroundGray,
+                    color: context.colors.surfaceVariant,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_forward_ios,
-                    color: AppConstants.textGray,
+                    color: context.colors.onSurfaceVariant,
                     size: 12,
                   ),
                 ),

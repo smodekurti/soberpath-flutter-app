@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+import '../config/theme_extensions.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
 
 class DailyQuoteCard extends StatelessWidget {
   const DailyQuoteCard({super.key});
@@ -13,13 +13,13 @@ class DailyQuoteCard extends StatelessWidget {
       builder: (context, provider, child) {
         return Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(AppConstants.paddingLarge),
+          padding: EdgeInsets.all(context.spacing.large),
           decoration: BoxDecoration(
-            color: AppConstants.lightBlue,
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusXLarge),
-            border: const Border(
+            color: context.colors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(context.borders.large),
+            border: Border(
               left: BorderSide(
-                color: AppConstants.blueAccent,
+                color: context.colors.primary,
                 width: 4,
               ),
             ),
@@ -31,44 +31,44 @@ class DailyQuoteCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(context.spacing.small),
                     decoration: BoxDecoration(
-                      color: AppConstants.blueAccent.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+                      color: context.colors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(context.borders.small),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.format_quote,
-                      color: AppConstants.blueAccent,
+                      color: context.colors.primary,
                       size: 20,
                     ),
                   ),
                   
-                  const SizedBox(width: AppConstants.paddingMedium),
+                  SizedBox(width: context.spacing.medium),
                   
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SafeText(
+                        Text(
                           provider.todaysQuote,
                           style: TextStyle(
                             fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                context, AppConstants.fontSizeLarge),
+                                context, context.typography.titleMedium),
                             fontStyle: FontStyle.italic,
-                            color: AppConstants.blueAccent,
+                            color: context.colors.primary,
                             height: 1.4,
                           ),
-                          maxLines: 6, // Allow reasonable number of lines
+                          maxLines: 6,
                         ),
                         
-                        const SizedBox(height: AppConstants.paddingSmall),
+                        SizedBox(height: context.spacing.small),
                         
-                        SafeText(
+                        Text(
                           'Daily Inspiration',
                           style: TextStyle(
                             fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                context, AppConstants.fontSizeMedium),
-                            color: AppConstants.blueAccent.withValues(alpha: 0.8),
+                                context, context.typography.bodyMedium),
+                            color: context.colors.primary.withValues(alpha: 0.8),
                             fontWeight: FontWeight.w500,
                           ),
                           maxLines: 1,

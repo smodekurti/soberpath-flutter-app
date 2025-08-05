@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soberpath_app/widgets/safe_text.dart';
+
 import 'dart:io';
+
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
+
+import '../config/theme_extensions.dart';
 import '../models/sobriety_models.dart';
-import '../utils/responsive_helpers.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
 import 'ios_notification_debug_screen.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
@@ -43,8 +47,8 @@ class _NotificationSettingsScreenState
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppConstants.primaryPurple,
+            colorScheme: ColorScheme.light(
+              primary: context.colors.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -85,7 +89,7 @@ class _NotificationSettingsScreenState
                 : 'Notification permissions denied. You can enable them in device settings.',
           ),
           backgroundColor:
-              granted ? AppConstants.successGreen : AppConstants.warningYellow,
+              granted ? context.colors.success : context.colors.warning,
         ),
       );
     }
@@ -94,10 +98,10 @@ class _NotificationSettingsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppConstants.backgroundGray,
+      backgroundColor: context.colors.background,
       appBar: AppBar(
         title: const Text('Notification Settings'),
-        backgroundColor: AppConstants.primaryPurple,
+        backgroundColor: context.colors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -105,14 +109,14 @@ class _NotificationSettingsScreenState
         builder: (context, provider, child) {
           return SingleChildScrollView(
             padding: EdgeInsets.all(ResponsiveHelpers.getResponsivePadding(
-                context, AppConstants.paddingLarge)),
+                context, context.spacing.large)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Permission Status Card
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                    padding: EdgeInsets.all(context.spacing.large),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -123,84 +127,82 @@ class _NotificationSettingsScreenState
                                   ? Icons.check_circle
                                   : Icons.warning,
                               color: provider.notificationPermissionsGranted
-                                  ? AppConstants.successGreen
-                                  : AppConstants.warningYellow,
+                                  ? context.colors.success
+                                  : context.colors.warning,
                             ),
-                            const SizedBox(width: AppConstants.paddingMedium),
-                            const Expanded(
-                              child: SafeText(
+                            SizedBox(width: context.spacing.medium),
+                            Expanded(
+                              child: Text(
                                 'Notification Permissions',
                                 style: TextStyle(
-                                  fontSize: AppConstants.fontSizeXLarge,
+                                  fontSize: context.typography.titleLarge,
                                   fontWeight: FontWeight.bold,
-                                  color: AppConstants.textDark,
+                                  color: context.colors.onSurface,
                                 ),
                                 maxLines: 1,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: AppConstants.paddingMedium),
-                        SafeText(
+                        SizedBox(height: context.spacing.medium),
+                        Text(
                           provider.notificationPermissionsGranted
                               ? 'Notifications are enabled and ready to help support your recovery journey.'
                               : 'Enable notifications to receive daily check-in reminders, milestone celebrations, and motivational messages.',
                           style: TextStyle(
-                            fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                context, AppConstants.fontSizeMedium),
-                            color: AppConstants.textGray,
+                            fontSize: context.typography.bodyMedium,
+                            color: context.colors.onSurfaceVariant,
                           ),
                           maxLines: 3,
                         ),
 
                         // Add debug information
-                        const SizedBox(height: AppConstants.paddingMedium),
+                        SizedBox(height: context.spacing.medium),
                         Container(
-                          padding:
-                              const EdgeInsets.all(AppConstants.paddingMedium),
+                          padding: EdgeInsets.all(context.spacing.medium),
                           decoration: BoxDecoration(
-                            color: AppConstants.backgroundGray,
+                            color: context.colors.surfaceVariant,
                             borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadiusMedium),
+                                context.borders.medium),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SafeText(
+                              SafeText(
                                 'Debug Info:',
                                 style: TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
+                                  fontSize: context.typography.bodySmall,
                                   fontWeight: FontWeight.bold,
-                                  color: AppConstants.textDark,
+                                  color: context.colors.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Permissions: ${provider.notificationPermissionsGranted ? "✅ Granted" : "❌ Denied"}',
-                                style: const TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
-                                  color: AppConstants.textGray,
+                                style: TextStyle(
+                                  fontSize: context.typography.bodySmall,
+                                  color: context.colors.onSurfaceVariant,
                                 ),
                               ),
                               Text(
                                 'Notifications Enabled: ${provider.appSettings.notificationsEnabled ? "✅ Yes" : "❌ No"}',
-                                style: const TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
-                                  color: AppConstants.textGray,
+                                style: TextStyle(
+                                  fontSize: context.typography.bodySmall,
+                                  color: context.colors.onSurfaceVariant,
                                 ),
                               ),
                               Text(
                                 'Reminder Time: ${provider.appSettings.reminderTime}',
-                                style: const TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
-                                  color: AppConstants.textGray,
+                                style: TextStyle(
+                                  fontSize: context.typography.bodySmall,
+                                  color: context.colors.onSurfaceVariant,
                                 ),
                               ),
                               Text(
                                 'User Name: ${provider.userProfile?.name ?? "No user"}',
-                                style: const TextStyle(
-                                  fontSize: AppConstants.fontSizeSmall,
-                                  color: AppConstants.textGray,
+                                style: TextStyle(
+                                  fontSize: context.typography.bodySmall,
+                                  color: context.colors.onSurfaceVariant,
                                 ),
                               ),
                             ],
@@ -208,7 +210,7 @@ class _NotificationSettingsScreenState
                         ),
 
                         if (!provider.notificationPermissionsGranted) ...[
-                          const SizedBox(height: AppConstants.paddingMedium),
+                          SizedBox(height: context.spacing.medium),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -222,28 +224,27 @@ class _NotificationSettingsScreenState
                   ),
                 ),
 
-                const SizedBox(height: AppConstants.paddingLarge),
+                SizedBox(height: context.spacing.large),
 
                 // Notification Settings Card
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.paddingLarge),
+                    padding: EdgeInsets.all(context.spacing.large),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SafeText(
+                        Text(
                           provider.notificationPermissionsGranted
                               ? 'Notifications Enabled'
                               : 'Notifications Disabled',
                           style: TextStyle(
-                            fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                                context, AppConstants.fontSizeXLarge),
+                            fontSize: context.typography.titleLarge,
                             fontWeight: FontWeight.bold,
-                            color: AppConstants.textDark,
+                            color: context.colors.onSurface,
                           ),
                           maxLines: 1,
                         ),
-                        const SizedBox(height: AppConstants.paddingLarge),
+                        SizedBox(height: context.spacing.large),
 
                         // Enable Notifications Toggle
                         _buildSettingRow(
@@ -262,7 +263,7 @@ class _NotificationSettingsScreenState
                         ),
 
                         if (_currentSettings.notificationsEnabled) ...[
-                          const Divider(height: AppConstants.paddingLarge * 2),
+                          Divider(height: context.spacing.large * 2),
 
                           // Daily Check-in Reminder Time
                           _buildTimeSettingRow(
@@ -273,7 +274,7 @@ class _NotificationSettingsScreenState
                             onTap: _selectTime,
                           ),
 
-                          const Divider(height: AppConstants.paddingLarge * 2),
+                          Divider(height: context.spacing.large * 2),
 
                           // Daily Quotes Toggle
                           _buildSettingRow(
@@ -294,17 +295,17 @@ class _NotificationSettingsScreenState
 
                           // iOS Debug Section (only show on iOS)
                           if (Platform.isIOS) ...[
-                            const Divider(height: AppConstants.paddingLarge * 2),
+                            Divider(height: context.spacing.large * 2),
                             ListTile(
                               leading: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: AppConstants.warningYellow.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(8),
+                                  color: context.colors.warning.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(context.borders.small),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.bug_report,
-                                  color: AppConstants.warningYellow,
+                                  color: context.colors.warning,
                                 ),
                               ),
                               title: const SafeText(
@@ -351,37 +352,35 @@ class _NotificationSettingsScreenState
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppConstants.lightPurple,
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
+            color: context.colors.primaryLight,
+            borderRadius: BorderRadius.circular(context.borders.small),
           ),
           child: Icon(
             icon,
-            color: AppConstants.primaryPurple,
+            color: context.colors.primary,
             size: 20,
           ),
         ),
-        const SizedBox(width: AppConstants.paddingMedium),
+        SizedBox(width: context.spacing.medium),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SafeText(
+              Text(
                 title,
                 style: TextStyle(
-                  fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                      context, AppConstants.fontSizeLarge),
+                  fontSize: context.typography.titleMedium,
                   fontWeight: FontWeight.w600,
-                  color: AppConstants.textDark,
+                  color: context.colors.onSurface,
                 ),
                 maxLines: 1,
               ),
               const SizedBox(height: 2),
-              SafeText(
+              Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                      context, AppConstants.fontSizeMedium),
-                  color: AppConstants.textGray,
+                  fontSize: context.typography.bodyMedium,
+                  color: context.colors.onSurfaceVariant,
                 ),
                 maxLines: 2,
               ),
@@ -391,7 +390,7 @@ class _NotificationSettingsScreenState
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: AppConstants.primaryPurple,
+          activeColor: context.colors.primary,
         ),
       ],
     );
@@ -406,47 +405,45 @@ class _NotificationSettingsScreenState
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
+      borderRadius: BorderRadius.circular(context.borders.medium),
       child: Padding(
         padding:
-            const EdgeInsets.symmetric(vertical: AppConstants.paddingSmall),
+            EdgeInsets.symmetric(vertical: context.spacing.small),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppConstants.lightBlue,
+                color: context.colors.primaryLight,
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusSmall),
+                    BorderRadius.circular(context.borders.small),
               ),
               child: Icon(
                 icon,
-                color: AppConstants.blueAccent,
+                color: context.colors.secondary,
                 size: 20,
               ),
             ),
-            const SizedBox(width: AppConstants.paddingMedium),
+            SizedBox(width: context.spacing.medium),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SafeText(
+                  Text(
                     title,
                     style: TextStyle(
-                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeLarge),
+                      fontSize: context.typography.titleMedium,
                       fontWeight: FontWeight.w600,
-                      color: AppConstants.textDark,
+                      color: context.colors.onSurface,
                     ),
                     maxLines: 1,
                   ),
                   const SizedBox(height: 2),
-                  SafeText(
+                  Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeMedium),
-                      color: AppConstants.textGray,
+                      fontSize: context.typography.bodyMedium,
+                      color: context.colors.onSurfaceVariant,
                     ),
                     maxLines: 2,
                   ),
@@ -454,30 +451,29 @@ class _NotificationSettingsScreenState
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppConstants.paddingMedium,
-                vertical: AppConstants.paddingSmall,
+              padding: EdgeInsets.symmetric(
+                horizontal: context.spacing.medium,
+                vertical: context.spacing.small,
               ),
               decoration: BoxDecoration(
-                color: AppConstants.backgroundGray,
+                color: context.colors.surfaceVariant,
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusMedium),
+                    BorderRadius.circular(context.borders.medium),
               ),
-              child: SafeText(
+              child: Text(
                 time?.format(context) ?? '9:00 AM',
                 style: TextStyle(
-                  fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                      context, AppConstants.fontSizeLarge),
+                  fontSize: context.typography.titleMedium,
                   fontWeight: FontWeight.w600,
-                  color: AppConstants.primaryPurple,
+                  color: context.colors.primary,
                 ),
                 maxLines: 1,
               ),
             ),
-            const SizedBox(width: AppConstants.paddingSmall),
-            const Icon(
+            SizedBox(width: context.spacing.small),
+            Icon(
               Icons.chevron_right,
-              color: AppConstants.textGray,
+              color: context.colors.onSurfaceVariant,
             ),
           ],
         ),

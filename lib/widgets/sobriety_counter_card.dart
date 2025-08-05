@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
-import '../constants/app_constants.dart';
-import '../utils/responsive_helpers.dart';
+import '../config/theme_extensions.dart';
+import '../utils/responsive_helpers.dart' hide SafeText;
 
 class SobrietyCounterCard extends StatelessWidget {
   const SobrietyCounterCard({super.key});
@@ -14,57 +14,61 @@ class SobrietyCounterCard extends StatelessWidget {
         final stats = provider.sobrietyStats;
 
         return Container(
-          margin: const EdgeInsets.only(top: AppConstants.paddingLarge),
+          margin: EdgeInsets.only(top: context.spacing.large),
           child: Card(
             child: Container(
               decoration: BoxDecoration(
-                gradient: AppConstants.purpleGradient,
+                gradient: LinearGradient(
+                  colors: [context.colors.primary, context.colors.secondary],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius:
-                    BorderRadius.circular(AppConstants.borderRadiusXLarge),
+                    BorderRadius.circular(context.borders.large),
               ),
-              padding: const EdgeInsets.all(AppConstants.paddingLarge),
+              padding: EdgeInsets.all(context.spacing.large),
               child: Column(
                 children: [
-                  SafeText(
+                  Text(
                     'Days Sober',
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeXLarge),
+                          context, context.typography.headlineSmall),
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: AppConstants.paddingMedium),
+                  SizedBox(height: context.spacing.medium),
 
-                  AutoSizeText(
+                  Text(
                     stats?.days.toString() ?? '0',
                     style: TextStyle(
                       fontSize: ResponsiveHelpers.getResponsiveFontSize(
-                          context, AppConstants.fontSizeDisplay),
+                          context, context.typography.displayLarge),
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                     maxLines: 1,
-                    minFontSize: 24,
-                    maxFontSize: 72,
+                    overflow: TextOverflow.ellipsis,
                   ),
 
                   // Removed the SizedBox and Text widget below this line
-                  // const SizedBox(height: AppConstants.paddingSmall),
+                  // const SizedBox(height: context.spacing.small),
                   //
                   // Text(
                   //   stats != null
                   //       ? '${stats.days} day${stats.days != 1 ? 's' : ''}'
                   //       : '0 days',
                   //   style: TextStyle(
-                  //     fontSize: AppConstants.fontSizeLarge,
+                  //     fontSize: context.typography.titleLarge,
                   //     color: Colors.white.withOpacity(0.9),
                   //   ),
                   // ),
 
-                  const SizedBox(height: AppConstants.paddingLarge),
+                  SizedBox(height: context.spacing.large),
 
                   if (!provider.hasSoberDate)
                     ElevatedButton(
@@ -74,7 +78,7 @@ class SobrietyCounterCard extends StatelessWidget {
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white, width: 1),
                       ),
-                      child: const SafeText('Set Sobriety Date', maxLines: 1),
+                      child: const Text('Set Sobriety Date', maxLines: 1, overflow: TextOverflow.ellipsis),
                     )
                   else
                     OutlinedButton(
@@ -83,8 +87,8 @@ class SobrietyCounterCard extends StatelessWidget {
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white),
                       ),
-                      child: const SafeText('Change Date',
-                          style: TextStyle(color: Colors.white), maxLines: 1),
+                      child: const Text('Change Date',
+                          style: TextStyle(color: Colors.white), maxLines: 1, overflow: TextOverflow.ellipsis),
                     ),
                 ],
               ),
@@ -105,8 +109,8 @@ class SobrietyCounterCard extends StatelessWidget {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppConstants.primaryPurple,
+            colorScheme: ColorScheme.light(
+              primary: context.colors.primary,
               onPrimary: Colors.white,
               surface: Colors.white,
               onSurface: Colors.black,
@@ -122,9 +126,9 @@ class SobrietyCounterCard extends StatelessWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sobriety date updated!'),
-            backgroundColor: AppConstants.successGreen,
+          SnackBar(
+            content: const Text('Sobriety date updated!'),
+            backgroundColor: context.colors.secondary,
           ),
         );
       }
