@@ -121,7 +121,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                         fontWeight: FontWeight.w500,
                       ),
                       tabs: [
-                        Tab(
+                        const Tab(
                           height: 44,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +141,7 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
                             ],
                           ),
                         ),
-                        Tab(
+                        const Tab(
                           height: 44,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

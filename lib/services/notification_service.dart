@@ -377,7 +377,6 @@ class NotificationService {
           await androidImplementation?.requestNotificationsPermission();
       return grantedNotificationPermission ?? false;
     }
-    return false;
   }
 
   Future<void> scheduleDailyCheckInReminder({
