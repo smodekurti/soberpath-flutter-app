@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'config/app_config.dart';
 import 'config/theme_extensions.dart';
 import 'services/app_state_provider.dart';
+import 'services/theme_provider.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_navigation_screen.dart';
@@ -20,21 +21,28 @@ class SoberPathApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppStateProvider(),
-      child: MaterialApp(
-        title: AppConfig.info.name,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: navigatorKey,
-        theme: SoberPathThemeData.lightTheme(),
-        darkTheme: SoberPathThemeData.darkTheme(),
-        themeMode: AppConfig.theme.defaultThemeMode,
-        home: const AppInitializer(),
-        routes: {
-          '/checkIn': (context) => const MainNavigationScreen(initialIndex: 0),
-          '/progress': (context) => const MainNavigationScreen(initialIndex: 2),
-          '/support': (context) => const MainNavigationScreen(initialIndex: 3),
-          '/home': (context) => const MainNavigationScreen(initialIndex: 0),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppStateProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: AppConfig.info.name,
+            debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
+            theme: SoberPathThemeData.lightTheme(),
+            darkTheme: SoberPathThemeData.darkTheme(),
+            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const AppInitializer(),
+            routes: {
+              '/checkIn': (context) => const MainNavigationScreen(initialIndex: 0),
+              '/progress': (context) => const MainNavigationScreen(initialIndex: 2),
+              '/support': (context) => const MainNavigationScreen(initialIndex: 3),
+              '/home': (context) => const MainNavigationScreen(initialIndex: 0),
+            },
+          );
         },
       ),
     );

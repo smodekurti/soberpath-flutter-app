@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../config/theme_extensions.dart';
 import '../utils/responsive_helpers.dart' hide SafeText;
+import '../widgets/theme_settings_widget.dart';
 
 import 'notification_settings_screen.dart';
 
@@ -23,6 +24,11 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Theme Section
+            const ThemeSettingsWidget(),
+            
+            SizedBox(height: context.spacing.large),
+            
             // Notifications Section
             _buildSectionHeader(context, 'Notifications'),
             _buildSettingsCard(

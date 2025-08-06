@@ -755,11 +755,11 @@ class _HelpConnectScreenState extends State<HelpConnectScreen>
     return Container(
       margin: EdgeInsets.only(bottom: context.spacing.medium),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(context.borders.medium),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: context.colors.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

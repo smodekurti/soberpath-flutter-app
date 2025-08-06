@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'app_config.dart';
+import 'dynamic_theme_colors.dart';
+import '../services/theme_provider.dart';
 
 /// Extension methods to easily access configuration values throughout the app
 extension AppConfigExtension on BuildContext {
-  /// Access app configuration
-  AppColors get colors => AppConfig.colors;
+  /// Access dynamic theme-aware colors
+  DynamicThemeColors get colors {
+    final themeProvider = Provider.of<ThemeProvider>(this, listen: true);
+    return DynamicThemeColors(isDarkMode: themeProvider.isDarkMode);
+  }
+  
+  /// Access static app configuration (for non-color properties)
+  AppColors get staticColors => AppConfig.colors;
   AppTypography get typography => AppConfig.typography;
   AppSpacing get spacing => AppConfig.spacing;
   AppBorders get borders => AppConfig.borders;
@@ -397,23 +406,178 @@ class SoberPathThemeData {
   }
 
   static ThemeData darkTheme() {
-    const colors = AppConfig.colors;
-    final lightTheme = SoberPathThemeData.lightTheme();
-    
-    // For now, return a dark variant of the light theme
-    // This can be expanded with proper dark colors later
-    return lightTheme.copyWith(
+    const darkColors = DynamicThemeColors(isDarkMode: true);
+    const typography = AppConfig.typography;
+    const spacing = AppConfig.spacing;
+    const borders = AppConfig.borders;
+    const theme = AppConfig.theme;
+
+    return ThemeData(
+      useMaterial3: theme.useMaterial3,
+      brightness: Brightness.dark,
       colorScheme: ColorScheme.dark(
-        primary: colors.primary,
-        onPrimary: colors.onPrimary,
-        secondary: colors.secondary,
-        onSecondary: colors.onSecondary,
-        surface: const Color(0xFF121212),
-        onSurface: const Color(0xFFE0E0E0),
-        surfaceContainerLowest: const Color(0xFF000000), // Replacing deprecated background
-        // onBackground replaced with onSurface
-        error: colors.error,
-        onError: colors.onError,
+        primary: darkColors.primary,
+        onPrimary: darkColors.onPrimary,
+        secondary: darkColors.secondary,
+        onSecondary: darkColors.onSecondary,
+        surface: darkColors.surface,
+        onSurface: darkColors.onSurface,
+        surfaceContainerLowest: darkColors.background,
+        error: darkColors.error,
+        onError: darkColors.onError,
+        outline: darkColors.outline,
+        outlineVariant: darkColors.outlineVariant,
+        surfaceContainerHighest: darkColors.surfaceVariant,
+        onSurfaceVariant: darkColors.onSurfaceVariant,
+      ),
+      
+      // Use the same typography and component themes as light theme
+      // but with dark color scheme
+      textTheme: TextTheme(
+        displayLarge: TextStyle(
+          fontSize: typography.displayLarge,
+          fontWeight: typography.bold,
+          fontFamily: typography.displayFontFamily,
+          letterSpacing: typography.letterSpacingTight,
+          color: darkColors.onSurface,
+        ),
+        displayMedium: TextStyle(
+          fontSize: typography.displayMedium,
+          fontWeight: typography.bold,
+          fontFamily: typography.displayFontFamily,
+          letterSpacing: typography.letterSpacingTight,
+          color: darkColors.onSurface,
+        ),
+        displaySmall: TextStyle(
+          fontSize: typography.displaySmall,
+          fontWeight: typography.bold,
+          fontFamily: typography.displayFontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        headlineLarge: TextStyle(
+          fontSize: typography.headlineLarge,
+          fontWeight: typography.semiBold,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: typography.headlineMedium,
+          fontWeight: typography.semiBold,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: typography.headlineSmall,
+          fontWeight: typography.semiBold,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        titleLarge: TextStyle(
+          fontSize: typography.titleLarge,
+          fontWeight: typography.semiBold,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        titleMedium: TextStyle(
+          fontSize: typography.titleMedium,
+          fontWeight: typography.medium,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        titleSmall: TextStyle(
+          fontSize: typography.titleSmall,
+          fontWeight: typography.medium,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          color: darkColors.onSurface,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: typography.bodyLarge,
+          fontWeight: typography.regular,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          height: typography.lineHeightNormal,
+          color: darkColors.onSurface,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: typography.bodyMedium,
+          fontWeight: typography.regular,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          height: typography.lineHeightNormal,
+          color: darkColors.onSurface,
+        ),
+        bodySmall: TextStyle(
+          fontSize: typography.bodySmall,
+          fontWeight: typography.regular,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingNormal,
+          height: typography.lineHeightNormal,
+          color: darkColors.onSurfaceVariant,
+        ),
+        labelLarge: TextStyle(
+          fontSize: typography.labelLarge,
+          fontWeight: typography.medium,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingWide,
+          color: darkColors.onSurface,
+        ),
+        labelMedium: TextStyle(
+          fontSize: typography.labelMedium,
+          fontWeight: typography.medium,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingWide,
+          color: darkColors.onSurface,
+        ),
+        labelSmall: TextStyle(
+          fontSize: typography.labelSmall,
+          fontWeight: typography.medium,
+          fontFamily: typography.fontFamily,
+          letterSpacing: typography.letterSpacingWide,
+          color: darkColors.onSurfaceVariant,
+        ),
+      ),
+      
+      // Dark theme scaffold and app bar
+      scaffoldBackgroundColor: darkColors.background,
+      appBarTheme: AppBarTheme(
+        backgroundColor: darkColors.surface,
+        foregroundColor: darkColors.onSurface,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontSize: typography.titleLarge,
+          fontWeight: typography.semiBold,
+          fontFamily: typography.fontFamily,
+          color: darkColors.onSurface,
+        ),
+      ),
+      
+      // Card theme for dark mode
+      cardTheme: CardTheme(
+        color: darkColors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: theme.elevationMedium,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borders.medium),
+        ),
+      ),
+      
+      // Other component themes with dark colors
+      iconTheme: IconThemeData(
+        color: darkColors.onSurface,
+        size: AppConfig.layout.iconSizeMedium,
+      ),
+      
+      primaryIconTheme: IconThemeData(
+        color: darkColors.primary,
+        size: AppConfig.layout.iconSizeMedium,
       ),
     );
   }
