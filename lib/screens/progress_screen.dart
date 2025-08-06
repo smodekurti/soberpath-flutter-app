@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import '../services/app_state_provider.dart';
 import '../config/theme_extensions.dart';
 import '../models/sobriety_models.dart';
-
 import '../widgets/safe_text.dart';
+import '../utils/responsive_helpers.dart' show ResponsiveHelpers;
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -31,15 +33,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
       backgroundColor: context.colors.surface,
       body: Consumer<AppStateProvider>(
         builder: (context, provider, child) {
+          final achievedMilestones = provider.milestones.where((m) => m.achieved).length;
+
           return CustomScrollView(
             slivers: [
-              // Collapsible header
               SliverAppBar(
-                expandedHeight: 150,
+                expandedHeight: context.spacing.large * 6,
                 floating: true,
                 pinned: true,
-                backgroundColor: context.colors.primary,
-                title: const Text('Progress'),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     decoration: BoxDecoration(
@@ -47,19 +50,61 @@ class _ProgressScreenState extends State<ProgressScreen> {
                     ),
                     child: SafeArea(
                       child: Padding(
-                        padding: EdgeInsets.all(context.spacing.large),
+                        padding: EdgeInsets.fromLTRB(
+                          context.spacing.medium,
+                          context.spacing.small,
+                          context.spacing.medium,
+                          context.spacing.small,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Show only the subtitle - main title now comes from SliverAppBar.title
-                            SafeText(
-                              'Track your milestones',
-                              style: TextStyle(
-                                fontSize: context.typography.titleLarge,
-                                color: Colors.white.withValues(alpha: 0.9),
+                            // Title row
+                            SizedBox(
+                              height: context.spacing.large * 2,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: SafeText(
+                                  'Your Progress',
+                                  style: TextStyle(
+                                    fontSize: context.typography.titleLarge,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                ),
                               ),
-                              maxLines: 2,
+                            ),
+                            // Bottom content
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AutoSizeText(
+                                    '$achievedMilestones Milestones Achieved',
+                                    style: TextStyle(
+                                      fontSize: context.typography.headlineSmall,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                    minFontSize: context.typography.titleMedium,
+                                    maxFontSize: context.typography.headlineMedium,
+                                  ),
+                                  SizedBox(height: context.spacing.small),
+                                  SafeText(
+                                    'Track your journey and celebrate achievements',
+                                    style: TextStyle(
+                                      fontSize: context.typography.bodyMedium,
+                                      color: Colors.white.withValues(alpha: 0.9),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -68,22 +113,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                 ),
               ),
-
-              // Content
-              SliverPadding(
-                padding: EdgeInsets.all(context.spacing.large),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    // Milestones Section
-                    _buildMilestonesSection(provider),
-                    
-                    SizedBox(height: context.spacing.large),
-                    
-                    // Statistics Card
-                    _buildStatisticsCard(provider),
-                  ]),
-                ),
-              ),
+              _buildSectionHeader('Achievements', Icons.emoji_events),
+              _buildMilestoneGrid(provider),
+              _buildSectionHeader('Analytics', Icons.analytics),
+              _buildStatistics(provider),
             ],
           );
         },
@@ -91,313 +124,24 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget _buildMilestonesSection(AppStateProvider provider) {
-    return Card(
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: EdgeInsets.all(context.spacing.large),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: EdgeInsets.fromLTRB(context.spacing.large, context.spacing.large, context.spacing.large, context.spacing.medium),
+        child: Row(
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: context.colors.secondary.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(context.borders.small),
-                  ),
-                  child: Icon(
-                    Icons.emoji_events,
-                    color: context.colors.secondary,
-                    size: 20,
-                  ),
+            Icon(icon, color: context.colors.primary, size: 24),
+            SizedBox(width: context.spacing.medium),
+            Expanded(
+              child: SafeText(
+                title,
+                style: TextStyle(
+                  fontSize: ResponsiveHelpers.getResponsiveFontSize(context, 20),
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
                 ),
-                SizedBox(width: context.spacing.medium),
-                Expanded(
-                  child: Text(
-                    'Milestones & Achievements',
-                    style: TextStyle(
-                      fontSize: context.typography.headlineSmall,
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.onSurface,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            
-            SizedBox(height: context.spacing.large),
-            
-            // Display milestones if available, otherwise show placeholder
-            if (provider.milestones.isNotEmpty)
-              ...provider.milestones.map((milestone) => Padding(
-                padding: EdgeInsets.only(bottom: context.spacing.medium),
-                child: _buildMilestoneItem(milestone, provider),
-              ))
-            else
-              _buildMilestonePlaceholder(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMilestoneItem(Milestone milestone, AppStateProvider provider) {
-    final stats = provider.sobrietyStats;
-    final progress = stats != null ? provider.getMilestoneProgress(milestone.days) : 0.0;
-    final daysUntil = stats != null ? provider.getDaysUntilMilestone(milestone.days) : milestone.days;
-
-    return Container(
-      padding: EdgeInsets.all(context.spacing.large),
-      decoration: BoxDecoration(
-        color: milestone.achieved 
-            ? context.colors.successLight 
-            : context.colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(context.borders.medium),
-        border: Border.all(
-          color: milestone.achieved 
-              ? context.colors.success 
-              : context.colors.outline,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: milestone.achieved 
-                      ? context.colors.success 
-                      : context.colors.outline,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  milestone.achieved ? Icons.check : Icons.flag,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                maxLines: 2,
               ),
-              SizedBox(width: context.spacing.medium),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SafeText(
-                      '${milestone.days} Day${milestone.days != 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: context.typography.titleLarge,
-                        fontWeight: FontWeight.bold,
-                        color: milestone.achieved 
-                            ? context.colors.success 
-                            : context.colors.onSurface,
-                      ),
-                      maxLines: 1,
-                    ),
-                    if (milestone.achieved && milestone.achievedDate != null)
-                      SafeText(
-                        'Achieved on ${milestone.achievedDate!.day}/${milestone.achievedDate!.month}/${milestone.achievedDate!.year}',
-                        style: TextStyle(
-                          fontSize: context.typography.bodySmall,
-                          color: context.colors.success,
-                        ),
-                        maxLines: 1,
-                      ),
-                  ],
-                ),
-              ),
-              if (milestone.achieved)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.spacing.medium,
-                    vertical: context.spacing.small,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.colors.success,
-                    borderRadius: BorderRadius.circular(context.borders.medium),
-                  ),
-                  child: SafeText(
-                    'Achieved!',
-                    style: TextStyle(
-                      fontSize: context.typography.bodySmall,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                  ),
-                ),
-            ],
-          ),
-          
-          SizedBox(height: context.spacing.medium),
-          
-          SafeText(
-            milestone.benefit,
-            style: TextStyle(
-              fontSize: context.typography.bodyMedium,
-              color: milestone.achieved 
-                  ? context.colors.success 
-                  : context.colors.onSurfaceVariant,
-              height: 1.4,
-            ),
-            maxLines: 3,
-          ),
-          
-          if (!milestone.achieved && stats != null) ...[
-            SizedBox(height: context.spacing.medium),
-            
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SafeText(
-                  'Progress',
-                  style: TextStyle(
-                    fontSize: context.typography.bodyMedium,
-                    fontWeight: FontWeight.w600,
-                    color: context.colors.onSurface,
-                  ),
-                  maxLines: 1,
-                ),
-                SafeText(
-                  '${stats.days} / ${milestone.days} days',
-                  style: TextStyle(
-                    fontSize: context.typography.bodyMedium,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  maxLines: 1,
-                ),
-              ],
-            ),
-            
-            SizedBox(height: context.spacing.small),
-            
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: context.colors.outline,
-              valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
-              minHeight: 6,
-            ),
-            
-            SizedBox(height: context.spacing.small),
-            
-            SafeText(
-              '$daysUntil days to go',
-              style: TextStyle(
-                fontSize: context.typography.bodySmall,
-                color: context.colors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 1,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMilestonePlaceholder() {
-    return Container(
-      padding: EdgeInsets.all(context.spacing.large),
-      decoration: BoxDecoration(
-        color: context.colors.surfaceVariant,
-        borderRadius: BorderRadius.circular(context.borders.medium),
-        border: Border.all(color: context.colors.outline),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.emoji_events_outlined,
-            size: 48,
-            color: context.colors.onSurfaceVariant,
-          ),
-          SizedBox(height: context.spacing.medium),
-          SafeText(
-            'No milestones available',
-            style: TextStyle(
-              fontSize: context.typography.titleMedium,
-              fontWeight: FontWeight.w600,
-              color: context.colors.onSurfaceVariant,
-            ),
-            maxLines: 1,
-          ),
-          SizedBox(height: context.spacing.small),
-          SafeText(
-            'Set your sobriety date to track milestones',
-            style: TextStyle(
-              fontSize: context.typography.bodyMedium,
-              color: context.colors.onSurfaceVariant,
-            ),
-            maxLines: 2,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatisticsCard(AppStateProvider provider) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(context.spacing.large),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: context.colors.primaryLight,
-                    borderRadius: BorderRadius.circular(context.borders.small),
-                  ),
-                  child: Icon(
-                    Icons.analytics,
-                    color: context.colors.primary,
-                    size: 20,
-                  ),
-                ),
-                SizedBox(width: context.spacing.medium),
-                Expanded(
-                  child: SafeText(
-                    'Progress Analytics',
-                    style: TextStyle(
-                      fontSize: context.typography.titleLarge,
-                      fontWeight: FontWeight.bold,
-                      color: context.colors.onSurface,
-                    ),
-                    maxLines: 1,
-                  ),
-                ),
-              ],
-            ),
-            
-            SizedBox(height: context.spacing.large),
-            
-            FutureBuilder<Map<String, dynamic>>(
-              future: provider.getStatistics(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final stats = snapshot.data!;
-                  return Column(
-                    children: [
-                      _buildStatRow('Check-in Streak', '${stats['checkInStreak'] ?? 0} days'),
-                      _buildStatRow('Best Mood Week', '${(stats['bestMoodWeek'] ?? 0.0).toStringAsFixed(1)}/10'),
-                      _buildStatRow('Lowest Craving Day', '${(stats['lowestCravingDay'] ?? 0.0).toStringAsFixed(1)}/10'),
-                      _buildStatRow('Progress Score', ((stats['milestonesAchieved'] ?? 0) * 10 + (stats['totalCheckIns'] ?? 0)).toString()),
-                    ],
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(context.colors.primary),
-                    ),
-                  );
-                }
-              },
             ),
           ],
         ),
@@ -405,38 +149,174 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 
-  Widget _buildStatRow(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.spacing.medium),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 2,
+  Widget _buildMilestoneGrid(AppStateProvider provider) {
+    final milestones = provider.milestones;
+    if (milestones.isEmpty) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.all(context.spacing.large),
+          child: Center(
             child: SafeText(
-              label,
+              'No milestones to show yet.',
               style: TextStyle(
-                fontSize: context.typography.titleMedium,
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(context, 16),
                 color: context.colors.onSurfaceVariant,
               ),
               maxLines: 2,
+              textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(width: context.spacing.small),
-          Expanded(
-            flex: 1,
-            child: SafeText(
-              value,
+        ),
+      );
+    }
+
+    return SliverPadding(
+      padding: EdgeInsets.all(context.spacing.large),
+      sliver: SliverGrid(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200.0,
+          mainAxisSpacing: 10.0,
+          crossAxisSpacing: 10.0,
+          childAspectRatio: 1.0,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return _buildMilestoneCard(milestones[index]);
+          },
+          childCount: milestones.length,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMilestoneCard(Milestone milestone) {
+    return Card(
+      elevation: context.borders.small.toDouble(),
+      color: milestone.achieved ? context.colors.successLight : context.colors.surfaceVariant,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.borders.medium)),
+      child: Padding(
+        padding: EdgeInsets.all(context.spacing.small),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              milestone.achieved ? Icons.check_circle : Icons.flag,
+              color: milestone.achieved ? context.colors.success : context.colors.onSurfaceVariant,
+              size: context.spacing.large,
+            ),
+            SizedBox(height: context.spacing.small),
+            AutoSizeText(
+              '${milestone.days} Days',
               style: TextStyle(
                 fontSize: context.typography.titleMedium,
                 fontWeight: FontWeight.bold,
-                color: context.colors.primary,
+                color: milestone.achieved ? context.colors.success : context.colors.onSurface,
               ),
               maxLines: 1,
-              textAlign: TextAlign.end,
+              minFontSize: context.typography.bodySmall,
+              maxFontSize: context.typography.titleLarge,
+            ),
+            SizedBox(height: context.spacing.small),
+            Flexible(
+              child: SafeText(
+                milestone.benefit,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: milestone.achieved ? context.colors.success : context.colors.onSurfaceVariant,
+                  fontSize: context.typography.bodySmall,
+                  height: 1.2,
+                ),
+                maxLines: 2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatistics(AppStateProvider provider) {
+    final checkIns = provider.dailyCheckIns;
+    if (checkIns.length < 2) {
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.all(context.spacing.large),
+          child: Center(
+            child: SafeText(
+              'Not enough data for charts yet.',
+              style: TextStyle(
+                fontSize: ResponsiveHelpers.getResponsiveFontSize(context, 16),
+                color: context.colors.onSurfaceVariant,
+              ),
+              maxLines: 2,
+              textAlign: TextAlign.center,
             ),
           ),
+        ),
+      );
+    }
+
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        _buildChartCard('Mood Over Time', _buildLineChart(checkIns, (c) => c.mood, context.colors.success)),
+        _buildChartCard('Cravings Over Time', _buildLineChart(checkIns, (c) => c.cravingLevel, context.colors.warning)),
+      ]),
+    );
+  }
+
+  Widget _buildChartCard(String title, Widget chart) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: context.spacing.large, vertical: context.spacing.small),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.borders.medium)),
+        child: Padding(
+          padding: EdgeInsets.all(context.spacing.large),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SafeText(
+                title,
+                style: TextStyle(
+                  fontSize: ResponsiveHelpers.getResponsiveFontSize(context, 18),
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+                maxLines: 2,
+              ),
+              SizedBox(height: context.spacing.large),
+              SizedBox(height: 200, child: chart),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLineChart(List<DailyCheckIn> checkIns, int Function(DailyCheckIn) getValue, Color color) {
+    final spots = checkIns.asMap().entries.map((e) => FlSpot(e.key.toDouble(), getValue(e.value).toDouble())).toList();
+
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(show: false),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            color: color,
+            barWidth: 4,
+            isStrokeCapRound: true,
+            dotData: FlDotData(show: false),
+            belowBarData: BarAreaData(show: true, color: color.withValues(alpha: 0.3)),
+          ),
         ],
+        minX: 0,
+        maxX: (spots.length - 1).toDouble(),
+        minY: 0,
+        maxY: 10,
       ),
     );
   }
