@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/app_state_provider.dart';
+import '../services/theme_provider.dart';
 import '../config/theme_extensions.dart';
+import '../config/dynamic_theme_colors.dart';
 import '../utils/responsive_helpers.dart' hide SafeText;
 
 class DailyCheckInCard extends StatefulWidget {
@@ -96,8 +98,12 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                       width: double.infinity,
                       padding: EdgeInsets.all(context.spacing.medium),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.colors.surface,
                         borderRadius: BorderRadius.circular(context.borders.small),
+                        border: Border.all(
+                          color: context.colors.outline.withValues(alpha: 0.2),
+                          width: 1,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +121,8 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                             todaysCheckIn.reflection,
                             style: TextStyle(
                               fontSize: context.typography.bodyMedium,
-                              color: context.colors.onSurfaceVariant,
+                              color: context.colors.onSurface,
+                              height: 1.4,
                             ),
                           ),
                         ],
@@ -366,7 +373,14 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text('Save Check-in'),
+                    : Text(
+                        'Save Check-in',
+                        style: TextStyle(
+                          inherit: true,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -376,6 +390,12 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
   }
 
   Future<void> _saveCheckIn(AppStateProvider provider) async {
+    // Get theme colors before async operation to avoid Provider access in event handler
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final dynamicColors = DynamicThemeColors(isDarkMode: themeProvider.isDarkMode);
+    final secondaryColor = dynamicColors.secondary;
+    final errorColor = dynamicColors.error;
+    
     final success = await provider.saveDailyCheckIn();
 
     if (success && mounted) {
@@ -383,14 +403,14 @@ class _DailyCheckInCardState extends State<DailyCheckInCard> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Check-in saved! Great job taking care of yourself today.'),
-          backgroundColor: context.colors.secondary,
+          backgroundColor: secondaryColor,
         ),
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Failed to save check-in. Please try again.'),
-          backgroundColor: context.colors.error,
+          backgroundColor: errorColor,
         ),
       );
     }

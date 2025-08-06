@@ -42,10 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return RefreshIndicator(
+            key: const ValueKey('home_refresh_indicator'),
             onRefresh: _refreshData,
             color: context.colors.primary,
             backgroundColor: context.colors.surface,
             child: CustomScrollView(
+              key: const ValueKey('home_scroll_view'),
               slivers: [
                 _buildHeader(context, provider),
                 SliverPadding(
@@ -53,13 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       if (provider.hasSoberDate)
-                        const DailyCheckInCard(),
-                      SizedBox(height: context.spacing.large),
+                        const DailyCheckInCard(key: ValueKey('daily_checkin_card')),
+                      SizedBox(key: const ValueKey('spacer_1'), height: context.spacing.large),
                       if (provider.hasSoberDate)
-                        _buildNextMilestoneCard(context, provider),
-                      SizedBox(height: context.spacing.large),
-                      const DailyQuoteCard(),
-                      SizedBox(height: context.spacing.large * 2),
+                        Container(
+                          key: const ValueKey('milestone_card_container'),
+                          child: _buildNextMilestoneCard(context, provider),
+                        ),
+                      SizedBox(key: const ValueKey('spacer_2'), height: context.spacing.large),
+                      const DailyQuoteCard(key: ValueKey('daily_quote_card')),
+                      SizedBox(key: const ValueKey('spacer_3'), height: context.spacing.large * 2),
                     ]),
                   ),
                 ),
@@ -182,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Congratulations on your incredible journey!',
                       style: TextStyle(
                         fontSize: context.typography.bodyMedium,
-                        color: context.colors.onSurfaceVariant,
+                        color: context.colors.onSurface.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -219,8 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
               nextMilestone.benefit,
               style: TextStyle(
                 fontSize: context.typography.bodyMedium,
-                color: context.colors.onSurfaceVariant,
+                color: context.colors.onSurface.withValues(alpha: 0.8),
                 fontStyle: FontStyle.italic,
+                height: 1.3,
               ),
             ),
             SizedBox(height: context.spacing.large),
@@ -256,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: context.typography.bodyMedium,
                   fontWeight: FontWeight.w500,
-                  color: context.colors.onSurfaceVariant,
+                  color: context.colors.onSurface.withValues(alpha: 0.9),
                 ),
               ),
             ),
